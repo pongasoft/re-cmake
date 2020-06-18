@@ -1,0 +1,9 @@
+@Echo OFF
+
+set BASEDIR=%~dp0
+
+cd %BASEDIR%
+
+set PYTHON_EXE="@Python3_EXECUTABLE@"
+
+%PYTHON_EXE% re-cmake.py %*
