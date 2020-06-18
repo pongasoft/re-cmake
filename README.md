@@ -145,7 +145,7 @@ Calling `add_re_plugin` will automatically generate a script in the build folder
 
 ```
 # ./re.sh -h
-usage: re.sh [-h] [-n] [-v] [-d] [-t] [-R] <command> [<command> ...]
+usage: re.sh [-hnvdtR] <command> [<command> ...] [-- [native-options]]
 
 positional arguments:
   command          See "Commands" section
@@ -176,6 +176,9 @@ Commands
 
   ---- CMake target ----
   <command>   : Any unknown <command> is treated as a cmake target
+
+  --- Native options ----
+  Pass remaining options to the native tool (ex: -- -j 8 for parallel build)
 ```
 
 Targets & Commands
