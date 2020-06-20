@@ -17,6 +17,7 @@ Features
 Requirements
 ------------
 
+* This project requires CMake (minimum version 3.13)
 * This project currently expects RE SDK 4.2.0 or 4.1.0 to be installed on the machine (it will not download it for you)
 * Due to the RE SDK requirements, this project also requires python 3 to be installed
 * It has been tested on macOS 10.14.6 with Xcode 9 installed
