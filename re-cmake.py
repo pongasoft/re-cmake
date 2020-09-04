@@ -28,7 +28,7 @@ else:
 
 
 parser = argparse.ArgumentParser(allow_abbrev=False,
-                                 usage=f'{script_name} [-hnvdtR] <command> [<command> ...] [-- [native-options]]',
+                                 usage=f'{script_name} [-hnvbdtR] <command> [<command> ...] [-- [native-options]]',
                                  formatter_class=argparse.RawDescriptionHelpFormatter,
                                  epilog='''
 Commands
@@ -55,6 +55,7 @@ Commands
 ''')
 parser.add_argument("-n", "--dry-run", help="Dry run (prints what it is going to do)", action="store_true", dest="dry_run")
 parser.add_argument("-v", "--verbose", help="Verbose build", action="store_true")
+parser.add_argument("-b", "--banner", help="Display a banner before every command", action="store_true")
 parser.add_argument("-d", "--debugging", help="Use 'Debugging' for local45 command", action="store_true")
 parser.add_argument("-t", "--testing", help="Use 'Testing' for local45 command", action="store_true")
 parser.add_argument("-R", "--release", help="Invoke CMake in Release mode (for multi-config generators)", action="store_true")
@@ -94,15 +95,35 @@ cmake_verbose = [] if not args.verbose else ['--verbose']
 
 cmake_config = ['--config', 'Release' if args.release else 'Debug']
 
+step = 0
+
 for command in commands:
+    step += 1
+    if args.banner:
+        if step > 1:
+            print("")
+            print("")
+        print("=============================================================")
+        print("==")
+        print(f"== Step {step} : {command}")
+        print("==")
+        print("=============================================================")
     if command in available_commands:
-        command = available_commands[command]
-    cmake_command = ['cmake', '--build', '.', *cmake_verbose, *cmake_config, '--target', command, *native_tool_options]
+        cmake_target = available_commands[command]
+    else:
+        cmake_target = command
+    cmake_command = ['cmake', '--build', '.', *cmake_verbose, *cmake_config, '--target', cmake_target, *native_tool_options]
     if args.dry_run:
         print(' '.join(cmake_command))
     else:
         import os
         import sys
         import subprocess
+
         this_script_root_dir = os.path.dirname(os.path.realpath(sys.argv[0]))
-        subprocess.run(cmake_command, cwd=this_script_root_dir)
+        cp = subprocess.run(cmake_command, cwd=this_script_root_dir)
+        if cp.returncode != 0:
+            import sys
+            args = ' '.join(cp.args)
+            print(f'Error: Command "{command}" [{args}] failed with error code {cp.returncode}', file=sys.stderr)
+            exit(cp.returncode)

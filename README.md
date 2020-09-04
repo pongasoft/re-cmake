@@ -62,7 +62,7 @@ By default, the `RE2DRender` program needs to be unzipped and is expected to be 
 
 `add_re_plugin`
 ---------------
-The framework exposes a single function to create the plugin targets and script. It can take many argument, very few being actually required
+The framework exposes a single function to create the plugin targets and script. It can take many arguments, very few being actually required
 
 ```
 add_re_plugin(
@@ -146,7 +146,7 @@ Calling `add_re_plugin` will automatically generate a script in the build folder
 
 ```
 # ./re.sh -h
-usage: re.sh [-hnvdtR] <command> [<command> ...] [-- [native-options]]
+usage: re.sh [-hnvbdtR] <command> [<command> ...] [-- [native-options]]
 
 positional arguments:
   command          See "Commands" section
@@ -155,6 +155,7 @@ optional arguments:
   -h, --help       show this help message and exit
   -n, --dry-run    Dry run (prints what it is going to do)
   -v, --verbose    Verbose build
+  -b, --banner     Display a banner before every command
   -d, --debugging  Use 'Debugging' for local45 command
   -t, --testing    Use 'Testing' for local45 command
   -R, --release    Invoke CMake in Release mode (for multi-config generators)
@@ -254,6 +255,11 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+
+#### 1.0.1 - 2020/09/04
+
+- When providing multiple commands to the script, the script now properly fails on the failed command and terminates with the error code of the failing process
+- Added `-b` option to the script to add a banner between multiple commands to make the output easier to follow 
 
 #### 1.0.0 - 2020/06/18
 
