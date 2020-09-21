@@ -33,7 +33,7 @@ function(add_re_plugin)
   # Argument parsing / default values
   #############################################
   set(options ENABLE_DEBUG_LOGGING)
-  set(oneValueArgs RE_SDK_VERSION RE_SDK_ROOT RE_2D_RENDER_ROOT INFO_LUA MOTHERBOARD_DEF_LUA REALTIME_CONTROLLER_LUA DISPLAY_LUA RESOURCES_DIR PYTHON3_EXECUTABLE RE_RECON_EXECUTABLE)
+  set(oneValueArgs RE_SDK_VERSION RE_SDK_ROOT RE_2D_RENDER_ROOT RE_2D_PREVIEW_ROOT INFO_LUA MOTHERBOARD_DEF_LUA REALTIME_CONTROLLER_LUA DISPLAY_LUA RESOURCES_DIR PYTHON3_EXECUTABLE RE_RECON_EXECUTABLE)
   set(multiValueArgs BUILD_SOURCES RENDER_2D_SOURCES NATIVE_BUILD_SOURCES NATIVE_BUILD_LIBS INCLUDE_DIRECTORIES COMPILE_DEFINITIONS COMPILE_OPTIONS NATIVE_COMPILE_DEFINITIONS NATIVE_COMPILE_OPTIONS NATIVE_LINK_OPTIONS JBOX_COMPILE_DEFINITIONS JBOX_COMPILE_OPTIONS)
   cmake_parse_arguments(
       "ARG" # prefix
@@ -99,6 +99,19 @@ function(add_re_plugin)
 
   if(${RE_2D_RENDER_EXECUTABLE} STREQUAL "RE_2D_RENDER_EXECUTABLE-NOTFOUND")
     message(FATAL_ERROR "Could not find RE2DRender executable in its expected location. Make sure that RE2DRender is unzipped or provide RE_2D_RENDER_ROOT argument.")
+  endif()
+
+  # Determine RE2DPreview executable
+  set_default_value(ARG_RE_2D_PREVIEW_ROOT "${ARG_RE_SDK_ROOT}/../RE2DPreview")
+
+  find_program(
+      RE_2D_PREVIEW_EXECUTABLE RE2DPreview
+      PATHS "${ARG_RE_2D_PREVIEW_ROOT}" "${ARG_RE_2D_PREVIEW_ROOT}/RE2DPreview" "${ARG_RE_SDK_ROOT}/.."
+      NO_DEFAULT_PATH
+  )
+
+  if(${RE_2D_PREVIEW_EXECUTABLE} STREQUAL "RE_2D_PREVIEW_EXECUTABLE-NOTFOUND")
+    message(WARNING "Could not find RE2DPreview executable in its expected location. Make sure that RE2DPreview is unzipped or provide RE_2D_PREVIEW_ROOT argument.")
   endif()
 
   set(JBOX_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR}/jbox)
@@ -246,7 +259,7 @@ function(internal_add_native_build)
 
   #############################################
   # common-render target
-  # execute RERender2D
+  # execute RE2DRender
   #############################################
   set(RE_GUI2D_DIR ${JBOX_BUILD_DIR}/GUI2D) # using this folder in order not to duplicate files
   set(RE_GUI_DIR ${JBOX_BUILD_DIR}/GUI)
@@ -262,6 +275,39 @@ function(internal_add_native_build)
   )
 
   add_custom_target(common-render ALL DEPENDS ${GUI_LUA_FILE})
+
+  #############################################
+  # common-preview target
+  # execute RE2DPreview
+  #############################################
+  set(RE_PREVIEW_DIR "${JBOX_BUILD_DIR}/GUIPreview2D")
+
+  set(RE_PREVIEW_FILMSTRIPS_DIR "${RE_PREVIEW_DIR}/Intermediate/Filmstrips")
+  set(RE_PREVIEW_FILES
+      "${RE_PREVIEW_FILMSTRIPS_DIR}/Snapshot_Panel_Back.png"
+      "${RE_PREVIEW_FILMSTRIPS_DIR}/Snapshot_Panel_Folded_Back.png"
+      "${RE_PREVIEW_FILMSTRIPS_DIR}/Snapshot_Panel_Folded_Front.png"
+      "${RE_PREVIEW_FILMSTRIPS_DIR}/Snapshot_Panel_Front.png"
+      )
+
+  if(${RE_2D_PREVIEW_EXECUTABLE} STREQUAL "RE_2D_PREVIEW_EXECUTABLE-NOTFOUND")
+    add_custom_command(
+        OUTPUT ${RE_PREVIEW_FILES}
+        COMMAND ${CMAKE_COMMAND} -E echo "Preview functionality not available [Could not find RE2DPreview executable in its expected location]. To fix this issue, make sure that RE2DPreview is unzipped or provide RE_2D_PREVIEW_ROOT argument"
+        DEPENDS ${ARG_RENDER_2D_SOURCES}
+    )
+  else()
+    add_custom_command(
+        OUTPUT ${RE_PREVIEW_FILES}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${RE_GUI2D_DIR}
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ARG_RENDER_2D_SOURCES} ${RE_GUI2D_DIR}
+        COMMAND ${RE_2D_PREVIEW_EXECUTABLE} ${RE_GUI2D_DIR} ${RE_PREVIEW_DIR}
+        COMMAND ${CMAKE_COMMAND} -E echo "Generated preview files under ${RE_PREVIEW_FILMSTRIPS_DIR}."
+        DEPENDS ${ARG_RENDER_2D_SOURCES}
+    )
+  endif()
+
+  add_custom_target(common-preview DEPENDS ${RE_PREVIEW_FILES})
 
   #############################################
   # install target
