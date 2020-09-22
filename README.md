@@ -58,7 +58,10 @@ You can install the SDK wherever you want on your system and provide it as an ar
 * `/Users/Shared/ReasonStudios/JukeboxSDK_<RE_SDK_VERSION>/SDK` for macOS
 * `C:/Users/Public/Documents/ReasonStudios/JukeboxSDK_<RE_SDK_VERSION>/SDK` for Windows
 
-By default, the `RE2DRender` program needs to be unzipped and is expected to be a sibling of `SDK` but this can also be provided as an argument to `add_re_plugin`
+By default, the `RE2DRender` program needs to be unzipped and is expected to be a sibling of `SDK` but this can also be provided as an argument to `add_re_plugin`.
+
+If you want to use the (optional) `preview` command, by default, the `RE2DPreview` program needs to be unzipped and is expected to be a sibling of `SDK` but this can also be provided as an argument to `add_re_plugin`.
+
 
 `add_re_plugin`
 ---------------
@@ -74,6 +77,7 @@ add_re_plugin(
        # Optional paths
               [RE_SDK_ROOT path_to_RE_SDK]
               [RE_2D_RENDER_ROOT path_to_RE2DRender_folder]
+              [RE_2D_PREVIEW_ROOT path_to_RE2DPreview_folder]
               [RE_RECON_EXECUTABLE path_to_Recon_executable]
               [PYTHON3_EXECUTABLE path_to_python3_executable]
 
@@ -119,6 +123,7 @@ Argument / Option            | Required | Description | Example
 `RENDER_2D_SOURCES`          | Yes | The list of 2D GUI files that composes the UI layer of the RE (must include `device_2D.lua` and `hdgui_2D.lua`) | Usually refers to some list `${re_sources_2d}`
 `RE_SDK_ROOT`                | No  | The (absolute) path to the root of the RE SDK. It will default to `/Users/Shared/ReasonStudios/JukeboxSDK_${RE_SDK_VERSION}/SDK` on macOS and `C:/Users/Public/Documents/ReasonStudios/JukeboxSDK_${RE_SDK_VERSION}/SDK` on Windows 10 | `/local/Jukebox_4.2.0/SDK` 
 `RE_2D_RENDER_ROOT`          | No  | The (absolute) path to the `RE2DRender` folder. It will default to `${RE_SDK_ROOT}/../RE2DRender` | `/local/RE2DRender` 
+`RE_2D_PREVIEW_ROOT`         | No  | The (absolute) path to the `RE2DPreview` folder. It will default to `${RE_SDK_ROOT}/../RE2DPreview` | `/local/RE2DPreview` 
 `INFO_LUA`                   | No  | The path to `info.lua` which by default is at the root | `defs/info.lua` 
 `MOTHERBOARD_DEF_LUA`        | No  | The path to `motherboard_def.lua` which by default is at the root | `defs/motherboard_def.lua` 
 `REALTIME_CONTROLLER_LUA`    | No  | The path to `realtime_controller.lua` which by default is at the root | `defs/realtime_controller.lua` 
@@ -172,7 +177,8 @@ Commands
 
   ---- Common commands ----
   clean       : clean all builds
-  render      : runs RERender2D to generate the GUI (necessary for running in Recon)
+  render      : runs RE2DRender to generate the GUI (necessary for running in Recon)
+  preview     : runs RE2DPreview to generate the device preview (useful for shop images)
   uninstall   : deletes the installed RE
   validate    : runs the Recon validate process on the currently installed plugin
 
@@ -192,6 +198,7 @@ CMake Target                  | Script Command    | Description
 `native-build`                | `build`           | Builds the plugin with the native toolchain (generate the `.dylib` or `.dll` only)
 `native-install`              | `install`         | Builds the plugin with the native toolchain, generates the GUI and installs the plugin in its default location (ready to be used in Recon)
 `common-render`               | `render`          | Generates the GUI
+`common-preview`              | `preview`         | Generates a 2D preview of the device front, back, folded front and folded back (generated at full 5x resolution (3770x345*u), useful for shop images)
 `common-uninstall`            | `uninstall`       | Uninstalls the plugin from its default location (for example you can run: `./re.sh uninstall install`)
 `common-clean`                | `clean`           | Cleans any previous build (forces a rebuild of everything on next build)
 `common-validate`             | `validate`        | Runs Recon validation on the currently installed plugin. It does **not** install the plugin prior.  
@@ -255,6 +262,10 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+
+#### 1.1.0 - 2020/09/21
+
+- Added `preview` command (resp. `common-preview` build target) which runs the RE2DPreview tool provided with the SDK. This tool generates a 2D preview of the device front, back, folded front and folded back (generated at full 5x resolution (3770x345*u)). This can be useful to generate images required for the shop (vs running Reason and capturing a low resolution image).
 
 #### 1.0.1 - 2020/09/04
 
