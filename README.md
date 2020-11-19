@@ -28,6 +28,9 @@ Quick Starting guide
 
 For the sake of keeping this project lean, it does not include any example but you should check [re-blank-plugin](https://github.com/pongasoft/re-blank-plugin) which is the official example project for this framework.
 
+> #### Tip
+> If you want to easily create a blank plugin check the [Rack Extension - Quick Start](https://pongasoft.com/re-quickstart/index.html) tool.
+
 This project offers a main CMake file `sdk.cmake` which simply needs to be included in your `CMakeLists.txt` for your plugin and then you invoke `add_re_plugin`.
 
 ```
