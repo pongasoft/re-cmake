@@ -21,6 +21,10 @@ if(NOT (APPLE OR WIN32))
   message(FATAL_ERROR "Only macOS or Windows supported")
 endif()
 
+set(RE_CMAKE_MAJOR_VERSION 1)
+set(RE_CMAKE_MINOR_VERSION 2)
+set(RE_CMAKE_PATCH_VERSION 0)
+
 # Capturing this outside function call due to scope...
 set(BUILD45_SRC_DIR ${CMAKE_CURRENT_LIST_DIR})
 

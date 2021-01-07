@@ -21,6 +21,7 @@ Requirements
 * This project currently expects RE SDK 4.2.0 or 4.1.0 to be installed on the machine (it will not download it for you)
 * Due to the RE SDK requirements, this project also requires python 3 to be installed
 * It has been tested on macOS 10.14.6 with Xcode 9 installed
+* It has been tested on macOS 11.1 with Xcode 12.3 installed and Apple Silicon (forces `x86_64` build to compile and run)
 * It has been tested on Windows 10 with Visual Studio 16 2019 build tools
 
 Quick Starting guide
@@ -265,6 +266,13 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+
+#### 1.2.0 - 2021/01/07
+
+- Introduced `cmake/RECMakeOptions.cmake` so that it can be invoked **prior** to `project()`.
+- Builds properly on Apple chipset (by forcing the build in `x86_64` architecture)
+
+This change is optional but if you want your project to adopt the new structure, you can simply [generate a new blank plugin](https://pongasoft.com/re-quickstart/index.html) to see the changes (only affects `CMakeLists.txt`) or check the [re-blank-plugin](https://github.com/pongasoft/re-blank-plugin) project.
 
 #### 1.1.0 - 2020/09/21
 
