@@ -17,7 +17,7 @@ Features
 Requirements
 ------------
 
-* This project requires CMake (minimum version 3.13)
+* This project requires CMake (minimum version 3.13) to be properly installed (`cmake` executable must be in your `PATH`)
 * This project currently expects RE SDK 4.2.0 or 4.1.0 to be installed on the machine (it will not download it for you)
 * Due to the RE SDK requirements, this project also requires python 3 to be installed
 * It has been tested on macOS 10.14.6 with Xcode 9 installed
@@ -152,6 +152,8 @@ Convenient script (`re.sh`/`re.bat`)
 ------------------------------------
 
 Calling `add_re_plugin` will automatically generate a script in the build folder called `re.sh` for macOS (resp.`re.bat` for Windows). This script is essentially a convenient wrapper around invoking `cmake` manually but with a simplified syntax (and help) to make it more user friendly to use.
+
+Note that this script is expecting the `cmake` command line tool to be in the `PATH` (use `cmake -version` to confirm it is properly installed).
 
 ```
 # ./re.sh -h
