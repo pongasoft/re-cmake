@@ -1,4 +1,4 @@
-# Copyright (c) 2020 pongasoft
+# Copyright (c) 2020-2021 pongasoft
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License. You may obtain a copy of
@@ -22,11 +22,20 @@ if(NOT (APPLE OR WIN32))
 endif()
 
 set(RE_CMAKE_MAJOR_VERSION 1)
-set(RE_CMAKE_MINOR_VERSION 2)
+set(RE_CMAKE_MINOR_VERSION 3)
 set(RE_CMAKE_PATCH_VERSION 0)
 
 # Capturing this outside function call due to scope...
 set(BUILD45_SRC_DIR ${CMAKE_CURRENT_LIST_DIR})
+
+#------------------------------------------------------------------------
+# Adding cmake folder to cmake path => allow for re-cmake cmake files
+#------------------------------------------------------------------------
+list(APPEND CMAKE_MODULE_PATH "${BUILD45_SRC_DIR}/cmake")
+
+if(RE_CMAKE_ENABLE_TESTING)
+  enable_testing()
+endif()
 
 ##########################################################
 # Main method called to add/create the RE plugin
@@ -38,7 +47,10 @@ function(add_re_plugin)
   #############################################
   set(options ENABLE_DEBUG_LOGGING)
   set(oneValueArgs RE_SDK_VERSION RE_SDK_ROOT RE_2D_RENDER_ROOT RE_2D_PREVIEW_ROOT INFO_LUA MOTHERBOARD_DEF_LUA REALTIME_CONTROLLER_LUA DISPLAY_LUA RESOURCES_DIR PYTHON3_EXECUTABLE RE_RECON_EXECUTABLE)
-  set(multiValueArgs BUILD_SOURCES RENDER_2D_SOURCES NATIVE_BUILD_SOURCES NATIVE_BUILD_LIBS INCLUDE_DIRECTORIES COMPILE_DEFINITIONS COMPILE_OPTIONS NATIVE_COMPILE_DEFINITIONS NATIVE_COMPILE_OPTIONS NATIVE_LINK_OPTIONS JBOX_COMPILE_DEFINITIONS JBOX_COMPILE_OPTIONS)
+  set(multiValueArgs BUILD_SOURCES RENDER_2D_SOURCES INCLUDE_DIRECTORIES COMPILE_DEFINITIONS COMPILE_OPTIONS
+                     JBOX_COMPILE_DEFINITIONS JBOX_COMPILE_OPTIONS
+                     NATIVE_BUILD_SOURCES NATIVE_BUILD_LIBS NATIVE_COMPILE_DEFINITIONS NATIVE_COMPILE_OPTIONS NATIVE_LINK_OPTIONS
+                     TEST_CASE_SOURCES TEST_SOURCES TEST_INCLUDE_DIRECTORIES TEST_COMPILE_DEFINITIONS TEST_COMPILE_OPTIONS TEST_LINK_LIBS)
   cmake_parse_arguments(
       "ARG" # prefix
       "${options}" # options
@@ -147,6 +159,12 @@ function(add_re_plugin)
   # Create the native build targets
   internal_add_native_build()
 
+  # Optionally setup testing
+  if(RE_CMAKE_ENABLE_TESTING AND DEFINED ARG_TEST_CASE_SOURCES)
+    include(RECMakeAddTest)
+    re_cmake_add_test()
+  endif()
+
   # Determine python executable
   if(ARG_PYTHON3_EXECUTABLE)
     set(Python3_EXECUTABLE ${ARG_PYTHON3_EXECUTABLE})
@@ -250,7 +268,7 @@ function(internal_add_native_build)
   set(target "native-build")
 
   add_library(${target} SHARED ${ARG_BUILD_SOURCES} ${ARG_NATIVE_BUILD_SOURCES})
-  target_link_libraries(${target} PRIVATE ${ARG_NATIVE_BUILD_LIBS} z-re-sdk-lib)
+  target_link_libraries(${target} PUBLIC ${ARG_NATIVE_BUILD_LIBS} z-re-sdk-lib)
   target_compile_definitions(${target} PUBLIC LOCAL_NATIVE_BUILD=1 ${ARG_COMPILE_DEFINITIONS} ${ARG_NATIVE_COMPILE_DEFINITIONS})
   target_compile_options(${target} PUBLIC ${ARG_COMPILE_OPTIONS} ${ARG_NATIVE_COMPILE_OPTIONS})
   target_include_directories(${target} PUBLIC ${ARG_INCLUDE_DIRECTORIES}) # exporting SDK API to plugin

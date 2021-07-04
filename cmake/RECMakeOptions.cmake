@@ -1,3 +1,19 @@
+# Copyright (c) 2020-2021 pongasoft
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
+#
+# @author Yan Pujante
+
 # Location of RE SDK: can be set when invoking cmake => cmake -D "RE_SDK_ROOT:PATH=/path/to/re_sdk"
 # or via -p option in configure.py script or in cmake-gui
 if(APPLE)
@@ -15,3 +31,21 @@ set(RE_2D_RENDER_ROOT "${RE_SDK_ROOT}/../RE2DRender" CACHE PATH "Location of RE2
 if(APPLE)
   set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "")
 endif()
+
+#------------------------------------------------------------------------
+# Option to enable/disable testing (includes GoogleTest)
+# Simply set to OFF if you want to use your own testing methodology
+# You can also write your own RECMakeAddTest.cmake module instead.
+#------------------------------------------------------------------------
+option(RE_CMAKE_ENABLE_TESTING "Enable Testing (GoogleTest)" ON)
+
+#------------------------------------------------------------------------
+# The git respository to fetch googletest from
+#------------------------------------------------------------------------
+set(googletest_GIT_REPO "https://github.com/google/googletest" CACHE STRING "googletest git repository URL")
+
+#------------------------------------------------------------------------
+# The git tag for googletest
+# release-1.11.0 => e2239ee6043f73722e7aa812a459f54a28552929
+#------------------------------------------------------------------------
+set(googletest_GIT_TAG "e2239ee6043f73722e7aa812a459f54a28552929" CACHE STRING "googletest git tag")

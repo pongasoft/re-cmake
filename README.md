@@ -115,6 +115,14 @@ add_re_plugin(
 
        # Optional toggle to enable debugging (for example JBOX_TRACE) (disabled otherwise)
               [ENABLE_DEBUG_LOGGING]
+       
+       # Optional testing entries
+              [TEST_CASE_SOURCES src1 [src2...]]
+              [TEST_SOURCES src1 [src2...]]
+              [TEST_INCLUDE_DIRECTORIES dir1 [dir2...]]
+              [TEST_COMPILE_DEFINITIONS def1 [def2...]]
+              [TEST_COMPILE_OPTIONS option1 [option2...]]
+              [TEST_LINK_LIBS lib1 [lib2...]]
 )
 ```
 
@@ -146,7 +154,12 @@ Argument / Option            | Required | Description | Example
 `NATIVE_LINK_OPTIONS`        | No  | The list of link options applied to native linker only. Note that there is no equivalent for jbox build. |
 `ENABLE_DEBUG_LOGGING`       | No  | Option to turn on debug logging (enable `JBOX_TRACE`). Equivalent to `NATIVE_COMPILE_OPTIONS DEBUG=1` |
 `RE_RECON_EXECUTABLE`        | No  | The Recon executable which is determined by looking in a default location but you can override it here | `"/Applications/Reason Recon 11 RESDK41 Logging.app/Contents/MacOS/Reason Recon"`
-
+`TEST_CASE_SOURCES`          | No  | The list of sources (cpp) files that contains the unit test cases. | Usually refers to some list `${re_test_cpp}`
+`TEST_SOURCES`               | No  | The list of sources (cpp) files that need to be compiled alongside the tests. | Usually refers to some list `${logging_sources}`
+`TEST_INCLUDE_DIRECTORIES`   | No  | The list of directories that need to be included for searching for `.h` files for compiling tests. Note that it is a list of directories so it does not contain `-I`. | Usually refers to some list `${RE_CPP_SRC_DIR}`
+`TEST_COMPILE_DEFINITIONS`   | No  | The list of compile definitions for compiling the tests. Note that `-D` should not be included. | `BOOST_MODE=1` `BOOST2`
+`TEST_COMPILE_OPTIONS`       | No  | The list of compile options applied for compiling the tests. | `-Wall`
+`TEST_LINK_LIBS`             | No  | The list of libraries that needs to be linked with the tests. | `native-build` (note that it can be a target)
 
 Convenient script (`re.sh`/`re.bat`)
 ------------------------------------
@@ -175,7 +188,8 @@ Commands
   ---- Native build commands ----
   build       : build the RE (.dylib)
   install     : build (code/gui) and install the RE for use in Recon
-
+  test        : run the unit tests
+  
   ---- Jbox build commands (build45 / sandbox toolchain) ----
   local45     : build (code/gui) and install the RE for use in Recon ('Deployment' type or -d/-t to change)
   universal45 : build the package for uploading to Reason Studio servers (.u45)
@@ -203,6 +217,7 @@ CMake Target                  | Script Command    | Description
 ----------------------------- | ----------------- | -----------
 `native-build`                | `build`           | Builds the plugin with the native toolchain (generate the `.dylib` or `.dll` only)
 `native-install`              | `install`         | Builds the plugin with the native toolchain, generates the GUI and installs the plugin in its default location (ready to be used in Recon)
+`native-run-test`             | `test`            | Runs the unit tests (only available for the native toolchain)
 `common-render`               | `render`          | Generates the GUI
 `common-preview`              | `preview`         | Generates a 2D preview of the device front, back, folded front and folded back (generated at full 5x resolution (3770x345*u), useful for shop images)
 `common-uninstall`            | `uninstall`       | Uninstalls the plugin from its default location (for example you can run: `./re.sh uninstall install`)
@@ -245,7 +260,10 @@ Of course the plugin in the end will run in a sandbox so care must be taken to p
 ```
 
 > #### Note
-> In the framework the sandbox build is called `jbox` because it uses the toolchain coming from the _Jukebox_ (which is a Reason Studios specific name for their framework) 
+> In this framework, the sandbox build is called `jbox` because it uses the toolchain coming from the _Jukebox_ (which is a Reason Studios specific name for their framework) 
+
+> #### Note
+> Due to the limitations of the jbox toolchain (which has a very limited subset of C++ available), testing is only available as a local native command.
 
 ### Summary
 
@@ -254,8 +272,8 @@ Of course the plugin in the end will run in a sandbox so care must be taken to p
 **Runs in**| Recon | Recon | Reason
 **Description** | Full power of C++ | Sandbox / C++ subset | Sandbox / C++ subset
 **CMake Build** | Invokes native build commands / toolchain | Invokes proprietary build system (`local45`) |  Invokes proprietary build system (`universal45`)
-**CMake Targets** | `native-build`, `native-install` | `jbox-l45-debugging-install`, `jbox-l45-testing-install`, `jbox-l45-deployment-install`, `jbox-validate45` | `jbox-u45-build`
-**Commands (`re.sh`)** | `build`, `install` | `local45`, `validate45` | `universal45`
+**CMake Targets** | `native-build`, `native-install`, `native-run-test` | `jbox-l45-debugging-install`, `jbox-l45-testing-install`, `jbox-l45-deployment-install`, `jbox-validate45` | `jbox-u45-build`
+**Commands (`re.sh`)** | `build`, `install`, `test` | `local45`, `validate45` | `universal45`
 
 Example Usage
 -------------
@@ -268,6 +286,9 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.3.0 - 2021/07/04
+
+- Added (optional) unit testing capabilities (new target `native-run-test`, new command `test`, and new `TEST_XX` optional arguments to `add_re_plugin()`)
 
 #### 1.2.0 - 2021/01/07
 

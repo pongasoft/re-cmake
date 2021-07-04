@@ -35,6 +35,7 @@ Commands
   ---- Native build commands ----
   build       : build the RE (.dylib)
   install     : build (code/gui) and install the RE for use in Recon
+  test        : run the unit tests
 
   ---- Jbox build commands (build45 / sandbox toolchain) ----
   local45     : build (code/gui) and install the RE for use in Recon ('Deployment' type or -d/-t to change) 
@@ -87,6 +88,7 @@ available_commands = {
 
     'build':       'native-build',
     'install':     'native-install',
+    'test':        'native-run-test',
 
     'local45':     f'jbox-l45-{local45_type}-install',
     'universal45': 'jbox-u45-build',
