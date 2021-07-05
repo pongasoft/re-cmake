@@ -23,7 +23,7 @@ endif()
 
 set(RE_CMAKE_MAJOR_VERSION 1)
 set(RE_CMAKE_MINOR_VERSION 3)
-set(RE_CMAKE_PATCH_VERSION 0)
+set(RE_CMAKE_PATCH_VERSION 1)
 
 # Capturing this outside function call due to scope...
 set(BUILD45_SRC_DIR ${CMAKE_CURRENT_LIST_DIR})
@@ -162,6 +162,7 @@ function(add_re_plugin)
   # Optionally setup testing
   if(RE_CMAKE_ENABLE_TESTING AND DEFINED ARG_TEST_CASE_SOURCES)
     include(RECMakeAddTest)
+    internal_add_plugin_library("native-test-lib" "STATIC")
     re_cmake_add_test()
   endif()
 
@@ -257,17 +258,10 @@ function(internal_add_re_sdk target)
 endfunction()
 
 ##########################################################
-# Internal function to create native build targets
+# Internal function to create the plugin library (shared for RE/static for tests)
 ##########################################################
-function(internal_add_native_build)
-
-  #############################################
-  # native-build target
-  # Compilation / Creation of the plugin library
-  #############################################
-  set(target "native-build")
-
-  add_library(${target} SHARED ${ARG_BUILD_SOURCES} ${ARG_NATIVE_BUILD_SOURCES})
+function(internal_add_plugin_library target type)
+  add_library(${target} ${type} ${ARG_BUILD_SOURCES} ${ARG_NATIVE_BUILD_SOURCES})
   target_link_libraries(${target} PUBLIC ${ARG_NATIVE_BUILD_LIBS} z-re-sdk-lib)
   target_compile_definitions(${target} PUBLIC LOCAL_NATIVE_BUILD=1 ${ARG_COMPILE_DEFINITIONS} ${ARG_NATIVE_COMPILE_DEFINITIONS})
   target_compile_options(${target} PUBLIC ${ARG_COMPILE_OPTIONS} ${ARG_NATIVE_COMPILE_OPTIONS})
@@ -278,6 +272,17 @@ function(internal_add_native_build)
   else()
     set_target_properties(${target} PROPERTIES OUTPUT_NAME "${RE_ID}64")
   endif()
+endfunction()
+
+##########################################################
+# Internal function to create native build targets
+##########################################################
+function(internal_add_native_build)
+  #############################################
+  # native-build target
+  # Compilation / Creation of the plugin library
+  #############################################
+  internal_add_plugin_library("native-build" "SHARED")
 
   #############################################
   # common-render target

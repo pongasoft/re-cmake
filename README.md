@@ -286,6 +286,10 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.3.1 - 2021/07/05
+
+- Introduced static library for running tests (was generating symbol not found when using shared one)
+
 #### 1.3.0 - 2021/07/04
 
 - Added (optional) unit testing capabilities (new target `native-run-test`, new command `test`, and new `TEST_XX` optional arguments to `add_re_plugin()`)
