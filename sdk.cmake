@@ -282,7 +282,8 @@ function(internal_add_native_build)
   # native-build target
   # Compilation / Creation of the plugin library
   #############################################
-  internal_add_plugin_library("native-build" "SHARED")
+  set(target "native-build")
+  internal_add_plugin_library("${target}" "SHARED")
 
   #############################################
   # common-render target
