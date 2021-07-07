@@ -31,6 +31,7 @@ function(re_cmake_add_test)
   add_executable("${target}" "${ARG_TEST_CASE_SOURCES}" "${ARG_TEST_SOURCES}")
   target_link_libraries("${target}" gtest_main "${ARG_TEST_LINK_LIBS}")
   target_include_directories("${target}" PUBLIC "${PROJECT_SOURCE_DIR}" "${GTEST_INCLUDE_DIRS}" "${ARG_TEST_INCLUDE_DIRECTORIES}")
+  set_target_properties(${target} PROPERTIES EXCLUDE_FROM_ALL TRUE)
 
   # Extra compile definitions?
   if(ARG_TEST_COMPILE_DEFINITIONS)

@@ -286,6 +286,11 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.3.2 - 2021/07/07
+
+- Fixed unnecessary build of tests when running `install`
+- Removed dependency on internal Jukebox classes when running tests (preventing mocking)
+
 #### 1.3.1 - 2021/07/05
 
 - Introduced static library for running tests (was generating symbol not found when using shared one)
