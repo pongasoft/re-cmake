@@ -35,7 +35,7 @@ FetchContent_Declare(googletest
     BUILD_COMMAND     ""
     INSTALL_COMMAND   ""
     TEST_COMMAND      ""
-)
+    )
 
 FetchContent_GetProperties(googletest)
 
@@ -51,13 +51,11 @@ if(NOT googletest_POPULATED)
 
 endif()
 
-# Prevent overriding the parent project's compiler/linker
-# settings on Windows
+# Prevent overriding the parent project's compiler/linker settings on Windows
 set(gtest_force_shared_crt ON CACHE BOOL "Set by re-cmake" FORCE)
 
-# Add googletest directly to our build. This defines
-# the gtest and gtest_main targets.
-add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR} EXCLUDE_FROM_ALL)
+# Do not install GoogleTest!
+option(INSTALL_GTEST "Enable installation of googletest. (Projects embedding googletest may want to turn this OFF.)" OFF)
 
-# specify include dir
-set(GTEST_INCLUDE_DIRS ${googletest_SOURCE_DIR}/googletest/include)
+# Add googletest directly to our build. This defines the gtest and gtest_main targets.
+add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR} EXCLUDE_FROM_ALL)

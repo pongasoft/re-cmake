@@ -286,6 +286,10 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.3.3 - 2021/07/11
+
+- Use `gtest_discover_tests` to minimize CMake invocation when building tests
+
 #### 1.3.2 - 2021/07/07
 
 - Fixed unnecessary build of tests when running `install`

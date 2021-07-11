@@ -30,7 +30,7 @@ function(re_cmake_add_test)
   set(target "native-build-test")
   add_executable("${target}" "${ARG_TEST_CASE_SOURCES}" "${ARG_TEST_SOURCES}")
   target_link_libraries("${target}" gtest_main "${ARG_TEST_LINK_LIBS}")
-  target_include_directories("${target}" PUBLIC "${PROJECT_SOURCE_DIR}" "${GTEST_INCLUDE_DIRS}" "${ARG_TEST_INCLUDE_DIRECTORIES}")
+  target_include_directories("${target}" PUBLIC "${PROJECT_SOURCE_DIR}" "${ARG_TEST_INCLUDE_DIRECTORIES}")
   set_target_properties(${target} PROPERTIES EXCLUDE_FROM_ALL TRUE)
 
   # Extra compile definitions?
@@ -43,10 +43,7 @@ function(re_cmake_add_test)
     target_compile_options("${target}" PUBLIC "${ARG_TEST_COMPILE_OPTIONS}")
   endif()
 
-  gtest_add_tests(
-      TARGET "${target}"
-      TEST_LIST "${target}_targets"
-  )
+  gtest_discover_tests("${target}")
 
   #------------------------------------------------------------------------
   # native-run-test target | run the tests
