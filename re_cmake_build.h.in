@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2021 pongasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ *
+ * @author Yan Pujante
+ */
+
+#pragma once
+#ifndef __Pongasoft_re_cmake_build_h__
+#define __Pongasoft_re_cmake_build_h__
+
+#define RE_CMAKE_PROJECT_NAME "@CMAKE_PROJECT_NAME@"
+#define RE_CMAKE_PROJECT_DIR R"(@PROJECT_DIR_NATIVE_PATH@)"
+#define RE_CMAKE_SDK_VERSION "@ARG_RE_SDK_VERSION@"
+#define RE_CMAKE_SDK_ROOT R"(@RE_SDK_ROOT_NATIVE_PATH@)"
+#define RE_CMAKE_FULL_PRODUCT_ID "@RE_FULL_PRODUCT_ID@"
+#define RE_CMAKE_MOTHERBOARD_DEF_LUA R"(@MOTHERBOARD_DEF_LUA_NATIVE_PATH@)"
+#define RE_CMAKE_REALTIME_CONTROLLER_LUA R"(@REALTIME_CONTROLLER_LUA_NATIVE_PATH@)"
+
+#endif // __Pongasoft_re_cmake_build_h__

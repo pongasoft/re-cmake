@@ -23,7 +23,7 @@ endif()
 
 set(RE_CMAKE_MAJOR_VERSION 1)
 set(RE_CMAKE_MINOR_VERSION 3)
-set(RE_CMAKE_PATCH_VERSION 3)
+set(RE_CMAKE_PATCH_VERSION 4)
 
 # Capturing this outside function call due to scope...
 set(BUILD45_SRC_DIR ${CMAKE_CURRENT_LIST_DIR})
@@ -155,6 +155,15 @@ function(add_re_plugin)
   if(ARG_ENABLE_DEBUG_LOGGING)
     list(APPEND ARG_NATIVE_COMPILE_DEFINITIONS "DEBUG=1")
   endif()
+
+  # Generate the re_cmake_build.h file
+  set(GENERATED_FILES_DIR "${CMAKE_BINARY_DIR}/generated")
+  file(TO_NATIVE_PATH "${CMAKE_CURRENT_LIST_DIR}" PROJECT_DIR_NATIVE_PATH)
+  file(TO_NATIVE_PATH "${ARG_MOTHERBOARD_DEF_LUA}" MOTHERBOARD_DEF_LUA_NATIVE_PATH)
+  file(TO_NATIVE_PATH "${ARG_REALTIME_CONTROLLER_LUA}" REALTIME_CONTROLLER_LUA_NATIVE_PATH)
+  file(TO_NATIVE_PATH "${ARG_RE_SDK_ROOT}" RE_SDK_ROOT_NATIVE_PATH)
+  configure_file("${BUILD45_SRC_DIR}/re_cmake_build.h.in" "${GENERATED_FILES_DIR}/re_cmake_build.h")
+  list(APPEND ARG_INCLUDE_DIRECTORIES "${GENERATED_FILES_DIR}")
 
   # Create the native build targets
   internal_add_native_build()

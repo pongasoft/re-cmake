@@ -27,7 +27,7 @@ Requirements
 Quick Starting guide
 --------------------
 
-For the sake of keeping this project lean, it does not include any example but you should check [re-blank-plugin](https://github.com/pongasoft/re-blank-plugin) which is the official example project for this framework.
+For the sake of keeping this project lean, it does not include any example, but you should check [re-blank-plugin](https://github.com/pongasoft/re-blank-plugin) which is the official example project for this framework.
 
 > #### Tip
 > If you want to easily create a blank plugin check the [Rack Extension - Quick Start](https://pongasoft.com/re-quickstart/index.html) tool.
@@ -286,6 +286,10 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.3.4 - 2021/09/12
+
+- Generates a new `re_cmake_build.h` file which can be included in the code to get access to information from the build itself (particularly useful for testing).
+
 #### 1.3.3 - 2021/07/11
 
 - Use `gtest_discover_tests` to minimize CMake invocation when building tests
