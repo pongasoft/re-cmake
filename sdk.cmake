@@ -23,7 +23,7 @@ endif()
 
 set(RE_CMAKE_MAJOR_VERSION 1)
 set(RE_CMAKE_MINOR_VERSION 3)
-set(RE_CMAKE_PATCH_VERSION 4)
+set(RE_CMAKE_PATCH_VERSION 5)
 
 # Capturing this outside function call due to scope...
 set(BUILD45_SRC_DIR ${CMAKE_CURRENT_LIST_DIR})
@@ -136,16 +136,22 @@ function(add_re_plugin)
   # Extract product id from info.lua
   # RE_ID will contain the unique ID required by the SDK
   #############################################
+  configure_file("${ARG_INFO_LUA}" "${CMAKE_BINARY_DIR}/info.lua" COPYONLY) # ensures cmake reruns if info.lua changes
+
   execute_process(
-      COMMAND ${LUA_EXECUTABLE} -e "dofile('${ARG_INFO_LUA}'); print(product_id)"
+      COMMAND ${LUA_EXECUTABLE} -e "dofile('${CMAKE_BINARY_DIR}/info.lua'); print(product_id .. ';' .. version_number)"
       RESULT_VARIABLE result
       OUTPUT_VARIABLE RE_FULL_PRODUCT_ID
       OUTPUT_STRIP_TRAILING_WHITESPACE)
 
+  list(POP_BACK RE_FULL_PRODUCT_ID RE_VERSION_NUMBER) # RE_VERSION_NUMBER contains the version
   string(REPLACE "." ";" RE_FULL_PRODUCT_ID_LIST "${RE_FULL_PRODUCT_ID}")
   list(POP_BACK RE_FULL_PRODUCT_ID_LIST RE_ID) # RE_ID contains the unique ID
 
-  message(STATUS "product_id=${RE_FULL_PRODUCT_ID}")
+  set(RE_FULL_PRODUCT_ID "${RE_FULL_PRODUCT_ID}" PARENT_SCOPE) # export
+  set(RE_VERSION_NUMBER "${RE_VERSION_NUMBER}" PARENT_SCOPE) # export
+
+  message(STATUS "product_id=${RE_FULL_PRODUCT_ID};version_number=${RE_VERSION_NUMBER}")
 
   # Add the target to create the (internal) RE SDK static library ("z-" prefix is so that it appears last in
   # the list because it is an internal target...)
@@ -468,14 +474,15 @@ function(internal_add_jbox_build)
   set(BUILD45_FILE ${CMAKE_BINARY_DIR}/build45.py)
   configure_file(${BUILD45_SRC_DIR}/build45.py.in ${BUILD45_FILE} @ONLY)
 
-  set(UNIVERSAL45_FILE ${JBOX_BUILD_DIR}/Output/Universal45/${RE_ID}.u45)
+  set(UNIVERSAL45_FILE "${CMAKE_BINARY_DIR}/${RE_FULL_PRODUCT_ID}-${RE_VERSION_NUMBER}.u45")
 
-  macro(build45 target message)
+  macro(build45 target message extra_commands)
     add_custom_target(${target}
         COMMAND ${CMAKE_COMMAND} -E make_directory ${JBOX_BUILD_DIR}
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ARG_INFO_LUA} ${ARG_MOTHERBOARD_DEF_LUA} ${ARG_REALTIME_CONTROLLER_LUA} ${ARG_DISPLAY_LUA} ${BUILD45_FILE} ${JBOX_BUILD_DIR}
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_RESOURCES_DIR} ${JBOX_BUILD_DIR}/Resources
         COMMAND ${Python3_EXECUTABLE} ${BUILD45_FILE} ${ARGN}
+        ${extra_commands}
         COMMAND ${CMAKE_COMMAND} -E echo ${message}
         DEPENDS common-render
         WORKING_DIRECTORY ${JBOX_BUILD_DIR}
@@ -490,10 +497,11 @@ function(internal_add_jbox_build)
   # jbox-l45-testing-install target
   # jbox-l45-deployment-install target
   #############################################
-  build45("jbox-u45-build" "Generated: ${UNIVERSAL45_FILE}" "universal45")
-  build45("jbox-l45-debugging-install" "Installed local45 under ${INSTALL_DIR}" "local45" "Debugging")
-  build45("jbox-l45-testing-install" "Installed local45 under ${INSTALL_DIR}" "local45" "Testing")
-  build45("jbox-l45-deployment-install" "Installed local45 under ${INSTALL_DIR}" "local45" "Deployment")
+  set(jbox-u45-build_commands COMMAND ${CMAKE_COMMAND} -E rename "${JBOX_BUILD_DIR}/Output/Universal45/${RE_ID}.u45" "${UNIVERSAL45_FILE}")
+  build45("jbox-u45-build" "Generated: ${UNIVERSAL45_FILE}" "${jbox-u45-build_commands}" "universal45")
+  build45("jbox-l45-debugging-install" "Installed local45 under ${INSTALL_DIR}" "" "local45" "Debugging")
+  build45("jbox-l45-testing-install" "Installed local45 under ${INSTALL_DIR}" "" "local45" "Testing")
+  build45("jbox-l45-deployment-install" "Installed local45 under ${INSTALL_DIR}" "" "local45" "Deployment")
 
   #############################################
   # common-clean target (removes jbox folder)

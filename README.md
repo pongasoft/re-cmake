@@ -286,6 +286,11 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.3.5 - 2021/10/02
+
+- Properly regenerates CMake project when `info.lua` changes
+- Extracts version from `info.lua` and generates a universal 45 package with better naming (`<product_id>-<version_number>.u45`)
+
 #### 1.3.4 - 2021/09/12
 
 - Generates a new `re_cmake_build.h` file which can be included in the code to get access to information from the build itself (particularly useful for testing).
