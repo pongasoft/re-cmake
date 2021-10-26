@@ -28,7 +28,7 @@ else:
 
 
 parser = argparse.ArgumentParser(allow_abbrev=False,
-                                 usage=f'{script_name} [-hnvbdtR] <command> [<command> ...] [-- [native-options]]',
+                                 usage=f'{script_name} [-hnvlbdtR] <command> [<command> ...] [-- [native-options]]',
                                  formatter_class=argparse.RawDescriptionHelpFormatter,
                                  epilog='''
 Commands
@@ -57,6 +57,7 @@ Commands
 ''')
 parser.add_argument("-n", "--dry-run", help="Dry run (prints what it is going to do)", action="store_true", dest="dry_run")
 parser.add_argument("-v", "--verbose", help="Verbose build", action="store_true")
+parser.add_argument("-l", "--low-res", help="Forces low res build (4.3.0+)", action="store_true", dest="low_res")
 parser.add_argument("-b", "--banner", help="Display a banner before every command", action="store_true")
 parser.add_argument("-d", "--debugging", help="Use 'Debugging' for local45 command", action="store_true")
 parser.add_argument("-t", "--testing", help="Use 'Testing' for local45 command", action="store_true")
@@ -78,16 +79,17 @@ if not commands:
     exit(0)
 
 local45_type = 'debugging' if args.debugging else 'testing' if args.testing else 'deployment'
+gui_type = 'low-res' if args.low_res else 'hi-res'
 
 available_commands = {
     'clean':       'common-clean',
-    'render':      'common-render',
+    'render':      f'common-render-{gui_type}',
     'preview':     'common-preview',
     'uninstall':   'common-uninstall',
     'validate':    'common-validate',
 
     'build':       'native-build',
-    'install':     'native-install',
+    'install':     f'native-install-{gui_type}',
     'test':        'native-run-test',
 
     'local45':     f'jbox-l45-{local45_type}-install',

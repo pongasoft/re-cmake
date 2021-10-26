@@ -18,7 +18,7 @@ Requirements
 ------------
 
 * This project requires CMake (minimum version 3.13) to be properly installed (`cmake` executable must be in your `PATH`)
-* This project currently expects RE SDK 4.2.0 or 4.1.0 to be installed on the machine (it will not download it for you)
+* This project currently expects RE SDK 4.3.0 (Hi Res support), 4.2.0 or 4.1.0 to be installed on the machine (it will not download it for you)
 * Due to the RE SDK requirements, this project also requires python 3 to be installed
 * It has been tested on macOS 10.14.6 with Xcode 9 installed
 * It has been tested on macOS 11.1 with Xcode 12.3 installed and Apple Silicon (forces `x86_64` build to compile and run)
@@ -130,10 +130,10 @@ Detailed description
 
 Argument / Option            | Required | Description | Example
 ---------------------------- | -------- | ----------- | ---
-`RE_SDK_VERSION`             | Yes | The version of the SDK this RE is being built for | `"4.2.0"` 
+`RE_SDK_VERSION`             | Yes | The version of the SDK this RE is being built for | `"4.3.0"` 
 `BUILD_SOURCES`              | Yes | The list of sources (cpp) files that are compiled to create the RE logic | Usually refers to some list `${re_sources_cpp}`
 `RENDER_2D_SOURCES`          | Yes | The list of 2D GUI files that composes the UI layer of the RE (must include `device_2D.lua` and `hdgui_2D.lua`) | Usually refers to some list `${re_sources_2d}`
-`RE_SDK_ROOT`                | No  | The (absolute) path to the root of the RE SDK. It will default to `/Users/Shared/ReasonStudios/JukeboxSDK_${RE_SDK_VERSION}/SDK` on macOS and `C:/Users/Public/Documents/ReasonStudios/JukeboxSDK_${RE_SDK_VERSION}/SDK` on Windows 10 | `/local/Jukebox_4.2.0/SDK` 
+`RE_SDK_ROOT`                | No  | The (absolute) path to the root of the RE SDK. It will default to `/Users/Shared/ReasonStudios/JukeboxSDK_${RE_SDK_VERSION}/SDK` on macOS and `C:/Users/Public/Documents/ReasonStudios/JukeboxSDK_${RE_SDK_VERSION}/SDK` on Windows 10 | `/local/Jukebox_4.3.0/SDK` 
 `RE_2D_RENDER_ROOT`          | No  | The (absolute) path to the `RE2DRender` folder. It will default to `${RE_SDK_ROOT}/../RE2DRender` | `/local/RE2DRender` 
 `RE_2D_PREVIEW_ROOT`         | No  | The (absolute) path to the `RE2DPreview` folder. It will default to `${RE_SDK_ROOT}/../RE2DPreview` | `/local/RE2DPreview` 
 `INFO_LUA`                   | No  | The path to `info.lua` which by default is at the root | `defs/info.lua` 
@@ -170,7 +170,7 @@ Note that this script is expecting the `cmake` command line tool to be in the `P
 
 ```
 # ./re.sh -h
-usage: re.sh [-hnvbdtR] <command> [<command> ...] [-- [native-options]]
+usage: re.sh [-hnvlbdtR] <command> [<command> ...] [-- [native-options]]
 
 positional arguments:
   command          See "Commands" section
@@ -179,6 +179,7 @@ optional arguments:
   -h, --help       show this help message and exit
   -n, --dry-run    Dry run (prints what it is going to do)
   -v, --verbose    Verbose build
+  -l, --low-res    Forces low res build (4.3.0+)
   -b, --banner     Display a banner before every command
   -d, --debugging  Use 'Debugging' for local45 command
   -t, --testing    Use 'Testing' for local45 command
@@ -189,7 +190,7 @@ Commands
   build       : build the RE (.dylib)
   install     : build (code/gui) and install the RE for use in Recon
   test        : run the unit tests
-  
+
   ---- Jbox build commands (build45 / sandbox toolchain) ----
   local45     : build (code/gui) and install the RE for use in Recon ('Deployment' type or -d/-t to change)
   universal45 : build the package for uploading to Reason Studio servers (.u45)
@@ -216,9 +217,13 @@ Here is a quick rundown of the list of targets and associated commands. Note tha
 CMake Target                  | Script Command    | Description
 ----------------------------- | ----------------- | -----------
 `native-build`                | `build`           | Builds the plugin with the native toolchain (generate the `.dylib` or `.dll` only)
-`native-install`              | `install`         | Builds the plugin with the native toolchain, generates the GUI and installs the plugin in its default location (ready to be used in Recon)
+`native-install-hi-res`       | `install`         | Builds the plugin with the native toolchain, generates the GUI (Hi Res) and installs the plugin in its default location (ready to be used in Recon) (not available if the SDK does not support Hi Res)
+`native-install-low-res`      | `-l install`      | Builds the plugin with the native toolchain, generates the GUI (Low Res) and installs the plugin in its default location (ready to be used in Recon)
+`native-install`              | `install`         | Shortcut to `native-install-hi-res` if the SDK supports Hi Res, `native-install-low-res` otherwise
 `native-run-test`             | `test`            | Runs the unit tests (only available for the native toolchain)
-`common-render`               | `render`          | Generates the GUI
+`common-render-hi-res`        | `render`          | Generates the Hi Res GUI (not available if the SDK does not support Hi Res)
+`common-render-low-res`       | `-l render`       | Generates the Low Res GUI
+`common-render`               | `render`          | Shortcut to `common-render-hi-res` if the SDK supports Hi Res, `common-render-low-res` otherwise
 `common-preview`              | `preview`         | Generates a 2D preview of the device front, back, folded front and folded back (generated at full 5x resolution (3770x345*u), useful for shop images)
 `common-uninstall`            | `uninstall`       | Uninstalls the plugin from its default location (for example you can run: `./re.sh uninstall install`)
 `common-clean`                | `clean`           | Cleans any previous build (forces a rebuild of everything on next build)

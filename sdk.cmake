@@ -23,7 +23,7 @@ endif()
 
 set(RE_CMAKE_MAJOR_VERSION 1)
 set(RE_CMAKE_MINOR_VERSION 3)
-set(RE_CMAKE_PATCH_VERSION 5)
+set(RE_CMAKE_PATCH_VERSION 6)
 
 # Capturing this outside function call due to scope...
 set(BUILD45_SRC_DIR ${CMAKE_CURRENT_LIST_DIR})
@@ -68,6 +68,13 @@ function(add_re_plugin)
   if(ARG_RE_SDK_VERSION VERSION_LESS 4.1.0)
     message(FATAL_ERROR "This framework supports SDK 4.1.0+")
   endif()
+
+  # Detecting support for hi res builds
+  if(ARG_RE_SDK_VERSION VERSION_GREATER_EQUAL 4.3.0)
+    set(RE_SDK_SUPPORT_HI_RES ON)
+    message(STATUS "RE SDK supports Hi Res builds")
+  endif()
+
 
   macro(set_default_value name default_value)
     if(NOT ${name})
@@ -303,23 +310,38 @@ function(internal_add_native_build)
   target_link_libraries(${target} PUBLIC z-re-sdk-lib)
 
   #############################################
-  # common-render target
-  # execute RE2DRender
+  # common-render target (common-render-low-res / common-render-hi-res)
+  # execute RE2DRender with the proper arguments
   #############################################
   set(RE_GUI2D_DIR ${JBOX_BUILD_DIR}/GUI2D) # using this folder in order not to duplicate files
   set(RE_GUI_DIR ${JBOX_BUILD_DIR}/GUI)
 
-  set(GUI_LUA_FILE ${RE_GUI_DIR}/Output/gui.lua)
-
+  # Render low res / 4.2.0 and less
+  set(GUI_LOW_RES_ICON ${RE_GUI_DIR}/Output/DeviceIcon.png)
   add_custom_command(
-      OUTPUT ${GUI_LUA_FILE}
+      OUTPUT ${GUI_LOW_RES_ICON}
       COMMAND ${CMAKE_COMMAND} -E make_directory ${RE_GUI2D_DIR}
       COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ARG_RENDER_2D_SOURCES} ${RE_GUI2D_DIR}
       COMMAND ${RE_2D_RENDER_EXECUTABLE} ${RE_GUI2D_DIR} ${RE_GUI_DIR}
       DEPENDS ${ARG_RENDER_2D_SOURCES}
   )
+  add_custom_target(common-render-low-res DEPENDS ${GUI_LOW_RES_ICON})
 
-  add_custom_target(common-render ALL DEPENDS ${GUI_LUA_FILE})
+  # Render hi res / 4.3.0+
+  if(RE_SDK_SUPPORT_HI_RES)
+    set(GUI_HI_RES_ICON ${RE_GUI_DIR}/Output/HD/DeviceIcon.png)
+    add_custom_command(
+        OUTPUT ${GUI_HI_RES_ICON}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${RE_GUI2D_DIR}
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ARG_RENDER_2D_SOURCES} ${RE_GUI2D_DIR}
+        COMMAND ${RE_2D_RENDER_EXECUTABLE} ${RE_GUI2D_DIR} ${RE_GUI_DIR} hi-res-only
+        DEPENDS ${ARG_RENDER_2D_SOURCES}
+    )
+    add_custom_target(common-render-hi-res DEPENDS ${GUI_HI_RES_ICON})
+    add_custom_target(common-render DEPENDS common-render-hi-res)
+  else()
+    add_custom_target(common-render DEPENDS common-render-low-res)
+  endif()
 
   #############################################
   # common-preview target
@@ -409,13 +431,26 @@ function(internal_add_native_build)
 
   #############################################
   # native-install target
-  # alias to install for naming consistency
+  # executes native-install-hi-res or native-install-low-res
   #############################################
-  add_custom_target(native-install
+  add_custom_target(native-install-low-res
       COMMAND ${CMAKE_COMMAND} --build . --target install
       COMMAND ${CMAKE_COMMAND} -E echo "Installed plugin under ${INSTALL_DIR}"
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+      DEPENDS common-render-low-res
       )
+
+  if(RE_SDK_SUPPORT_HI_RES)
+    add_custom_target(native-install-hi-res
+        COMMAND ${CMAKE_COMMAND} --build . --target install
+        COMMAND ${CMAKE_COMMAND} -E echo "Installed plugin under ${INSTALL_DIR}"
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        DEPENDS common-render-hi-res
+        )
+    add_custom_target(native-install DEPENDS native-install-hi-res)
+  else()
+    add_custom_target(native-install DEPENDS native-install-low-res)
+  endif()
 
   #############################################
   # common-uninstall target
