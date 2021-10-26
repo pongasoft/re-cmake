@@ -291,6 +291,13 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.3.6 - 2021/10/26
+
+- Added support for 4.3.0 / Hi Res toolchain
+- new targets: `common-render-low-res` / `common-render-hi-res` and `common-render` is a now a shortcut
+- new targets: `native-install-low-res` / `native-install-hi-res` and `native-install` is now a shortcut
+- new `-l` option added to script to force a low res build with 4.3.0+
+
 #### 1.3.5 - 2021/10/02
 
 - Properly regenerates CMake project when `info.lua` changes
