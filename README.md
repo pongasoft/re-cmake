@@ -291,6 +291,10 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.3.7 - 2021/10/28
+
+- Added Recon12 name to list of Recon executables
+
 #### 1.3.6 - 2021/10/26
 
 - Added support for 4.3.0 / Hi Res toolchain

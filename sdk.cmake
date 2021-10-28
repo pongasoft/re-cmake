@@ -557,9 +557,9 @@ function(internal_add_validation)
   else()
     find_program(
         RE_RECON_EXECUTABLE
-        NAMES "Reason Recon" "Reason Recon 11 RESDK41 Logging"
+        NAMES "Reason Recon" "Reason Recon 12 RESDK4 Logging" "Reason Recon 11 RESDK41 Logging"
         PATHS "/Applications" "/Applications/Reason Recon"
-              "c:/Program Files/Propellerhead" "c:/Program Files/Propellerhead/Reason Recon" "c:/Program Files/Propellerhead/Reason Recon 11 RESDK4 Logging"
+              "c:/Program Files/Propellerhead" "c:/Program Files/Propellerhead/Reason Recon" "c:/Program Files/Propellerhead/Reason Recon 12 RESDK4 Logging" "c:/Program Files/Propellerhead/Reason Recon 11 RESDK4 Logging"
     )
   endif()
 
