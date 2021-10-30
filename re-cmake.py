@@ -18,6 +18,7 @@
 
 import argparse
 import platform
+import os
 
 script_name = ''
 
@@ -28,7 +29,7 @@ else:
 
 
 parser = argparse.ArgumentParser(allow_abbrev=False,
-                                 usage=f'{script_name} [-hnvlbdtR] <command> [<command> ...] [-- [native-options]]',
+                                 usage=f'{script_name} [-hnvlbdtRZ] <command> [<command> ...] [-- [native-options]]',
                                  formatter_class=argparse.RawDescriptionHelpFormatter,
                                  epilog='''
 Commands
@@ -62,9 +63,38 @@ parser.add_argument("-b", "--banner", help="Display a banner before every comman
 parser.add_argument("-d", "--debugging", help="Use 'Debugging' for local45 command", action="store_true")
 parser.add_argument("-t", "--testing", help="Use 'Testing' for local45 command", action="store_true")
 parser.add_argument("-R", "--release", help="Invoke CMake in Release mode (for multi-config generators)", action="store_true")
+parser.add_argument("-Z", help="Clears the Recon Graphics Cache (workaround)", action="store_true", dest="clear_recon_graphics_cache")
 parser.add_argument('command', help='See "Commands" section', nargs=argparse.REMAINDER)
 
 args = parser.parse_args()
+
+# compute Recon cache dir path
+def recon_cache_dirpath():
+    if os.name == 'nt':
+        dirpath_localappdata = os.path.normpath(os.getenv('LOCALAPPDATA') )
+        r = os.path.join(dirpath_localappdata, 'Propellerhead Software', 'Reason Recon', 'GraphicsCache')
+    else:
+        dirpath_userprofile = os.path.normpath(os.path.expanduser('~') )
+        r = os.path.join(dirpath_userprofile, 'Library', 'Caches', 'Reason Recon', 'GraphicsCache')
+
+    return r
+
+
+# Clear the cache
+def clear_recon_graphics_cache():
+    import shutil
+
+    dirpath = recon_cache_dirpath()
+    if os.path.isdir(dirpath):
+        if args.dry_run:
+            print(f'Deleting "{dirpath}"')
+        else:
+            shutil.rmtree(dirpath)
+            print(f'Deleted "{dirpath}"')
+
+# Check for clearing cache
+if args.clear_recon_graphics_cache:
+    clear_recon_graphics_cache()
 
 # determines '--' position
 commands = args.command
@@ -122,7 +152,6 @@ for command in commands:
     if args.dry_run:
         print(' '.join(cmake_command))
     else:
-        import os
         import sys
         import subprocess
 

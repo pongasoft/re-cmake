@@ -170,7 +170,7 @@ Note that this script is expecting the `cmake` command line tool to be in the `P
 
 ```
 # ./re.sh -h
-usage: re.sh [-hnvlbdtR] <command> [<command> ...] [-- [native-options]]
+usage: re.sh [-hnvlbdtRZ] <command> [<command> ...] [-- [native-options]]
 
 positional arguments:
   command          See "Commands" section
@@ -184,6 +184,7 @@ optional arguments:
   -d, --debugging  Use 'Debugging' for local45 command
   -t, --testing    Use 'Testing' for local45 command
   -R, --release    Invoke CMake in Release mode (for multi-config generators)
+  -Z               Clears the Recon Graphics Cache (workaround)
 
 Commands
   ---- Native build commands ----
@@ -233,6 +234,9 @@ CMake Target                  | Script Command    | Description
 `jbox-l45-debugging-install`  | `-d local45`      | Builds the (sandboxed) plugin with the jbox toolchain (`local45 Debugging`), generates the GUI and installs the plugin in its default location (ready to be used in Recon)
 `jbox-u45-build`              | `universal45`     | Builds the universal45 (`.u45`) package with the jbox toolchain ready to be uploaded to Reason servers
 `jbox-validate45`             | `validate45`      | Builds the (sandboxed) plugin with the jbox toolchain (`local45`) and runs Recon validation on it
+
+> #### Note
+> 2021/10/30: Due to a caching issue with Recon 12 and Hi Res graphics, you can use `-Z` command line argument to delete the cache directory (this is a hack/workaround) 
 
 Understanding the different kinds of builds
 -------------------------------------------
@@ -291,6 +295,10 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.3.8 - 2021/10/30
+
+- Added `-Z` command line option to the script to work around the graphics caching issue of Recon 12
+
 #### 1.3.7 - 2021/10/28
 
 - Added Recon12 name to list of Recon executables
