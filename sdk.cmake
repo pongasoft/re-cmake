@@ -334,7 +334,7 @@ function(internal_add_native_build)
         OUTPUT ${GUI_HI_RES_ICON}
         COMMAND ${CMAKE_COMMAND} -E make_directory ${RE_GUI2D_DIR}
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ARG_RENDER_2D_SOURCES} ${RE_GUI2D_DIR}
-        COMMAND ${RE_2D_RENDER_EXECUTABLE} ${RE_GUI2D_DIR} ${RE_GUI_DIR} hi-res-only
+        COMMAND ${RE_2D_RENDER_EXECUTABLE} ${RE_GUI2D_DIR} ${RE_GUI_DIR} ${RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION}
         DEPENDS ${ARG_RENDER_2D_SOURCES}
     )
     add_custom_target(common-render-hi-res DEPENDS ${GUI_HI_RES_ICON})

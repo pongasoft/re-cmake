@@ -128,38 +128,38 @@ add_re_plugin(
 
 Detailed description
 
-Argument / Option            | Required | Description | Example
----------------------------- | -------- | ----------- | ---
-`RE_SDK_VERSION`             | Yes | The version of the SDK this RE is being built for | `"4.3.0"` 
-`BUILD_SOURCES`              | Yes | The list of sources (cpp) files that are compiled to create the RE logic | Usually refers to some list `${re_sources_cpp}`
-`RENDER_2D_SOURCES`          | Yes | The list of 2D GUI files that composes the UI layer of the RE (must include `device_2D.lua` and `hdgui_2D.lua`) | Usually refers to some list `${re_sources_2d}`
-`RE_SDK_ROOT`                | No  | The (absolute) path to the root of the RE SDK. It will default to `/Users/Shared/ReasonStudios/JukeboxSDK_${RE_SDK_VERSION}/SDK` on macOS and `C:/Users/Public/Documents/ReasonStudios/JukeboxSDK_${RE_SDK_VERSION}/SDK` on Windows 10 | `/local/Jukebox_4.3.0/SDK` 
-`RE_2D_RENDER_ROOT`          | No  | The (absolute) path to the `RE2DRender` folder. It will default to `${RE_SDK_ROOT}/../RE2DRender` | `/local/RE2DRender` 
-`RE_2D_PREVIEW_ROOT`         | No  | The (absolute) path to the `RE2DPreview` folder. It will default to `${RE_SDK_ROOT}/../RE2DPreview` | `/local/RE2DPreview` 
-`INFO_LUA`                   | No  | The path to `info.lua` which by default is at the root | `defs/info.lua` 
-`MOTHERBOARD_DEF_LUA`        | No  | The path to `motherboard_def.lua` which by default is at the root | `defs/motherboard_def.lua` 
-`REALTIME_CONTROLLER_LUA`    | No  | The path to `realtime_controller.lua` which by default is at the root | `defs/realtime_controller.lua` 
-`DISPLAY_LUA`                | No  | The path to `display.lua` which by default is at the root (note that `display.lua` is only required if you have any custom displays) | `src/lua/display.lua` 
-`RESOURCES_DIR`              | No  | The path to the `Resources` folder which by default is at the root | `i18n/Resources` 
-`INCLUDE_DIRECTORIES`        | No  | The list of directories that need to be included for searching for `.h` files. Note that it is a list of directories so it does not contain `-I`. | Usually refers to some list `${logging_include_dir}`
-`PYTHON3_EXECUTABLE`         | No  | The python 3 executable which is determined by default but you can override it here | `/opt/local/bin/python3` 
-`NATIVE_BUILD_SOURCES`       | No  | The list of sources (cpp) files that are compiled ONLY during the native build (for example to add debugging/tracing libraries that cannot be compiled during the jbox build due to the sandbox) | Usually refers to some list `${logging_sources}`
-`NATIVE_BUILD_LIBS`          | No  | The list of libraries that are linked ONLY during the native build (for example to add debugging/tracing libraries that cannot be linked during the jbox build due to the sandbox) | `loguru`
-`COMPILE_DEFINITIONS`        | No  | The list of compile definitions applied to native and jbox compilers. Note that `-D` should not be included. | `BOOST_MODE=1` `BOOST2`
-`NATIVE_COMPILE_DEFINITIONS` | No  | The list of compile definitions applied to native compiler only. Note that `-D` should not be included. | `BOOST_MODE=1` `BOOST2`
-`JBOX_COMPILE_DEFINITIONS`   | No  | The list of compile definitions applied to jbox compiler only. Note that `-D` should not be included. | `BOOST_MODE=1` `BOOST2`
-`COMPILE_OPTIONS`            | No  | The list of compile options applied to native and jbox compilers. | `-Wall`
-`NATIVE_COMPILE_OPTIONS`     | No  | The list of compile options applied to native compiler only. | `-Wall`
-`JBOX_COMPILE_OPTIONS`       | No  | The list of compile options applied to jbox compiler only. | `-Wall`
-`NATIVE_LINK_OPTIONS`        | No  | The list of link options applied to native linker only. Note that there is no equivalent for jbox build. |
-`ENABLE_DEBUG_LOGGING`       | No  | Option to turn on debug logging (enable `JBOX_TRACE`). Equivalent to `NATIVE_COMPILE_OPTIONS DEBUG=1` |
-`RE_RECON_EXECUTABLE`        | No  | The Recon executable which is determined by looking in a default location but you can override it here | `"/Applications/Reason Recon 11 RESDK41 Logging.app/Contents/MacOS/Reason Recon"`
-`TEST_CASE_SOURCES`          | No  | The list of sources (cpp) files that contains the unit test cases. | Usually refers to some list `${re_test_cpp}`
-`TEST_SOURCES`               | No  | The list of sources (cpp) files that need to be compiled alongside the tests. | Usually refers to some list `${logging_sources}`
-`TEST_INCLUDE_DIRECTORIES`   | No  | The list of directories that need to be included for searching for `.h` files for compiling tests. Note that it is a list of directories so it does not contain `-I`. | Usually refers to some list `${RE_CPP_SRC_DIR}`
-`TEST_COMPILE_DEFINITIONS`   | No  | The list of compile definitions for compiling the tests. Note that `-D` should not be included. | `BOOST_MODE=1` `BOOST2`
-`TEST_COMPILE_OPTIONS`       | No  | The list of compile options applied for compiling the tests. | `-Wall`
-`TEST_LINK_LIBS`             | No  | The list of libraries that needs to be linked with the tests. | `native-build` (note that it can be a target)
+| Argument / Option            | Required | Description                                                                                                                                                                                                                            | Example                                                                           |
+|------------------------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
+| `RE_SDK_VERSION`             | Yes      | The version of the SDK this RE is being built for                                                                                                                                                                                      | `"4.3.0"`                                                                         |
+| `BUILD_SOURCES`              | Yes      | The list of sources (cpp) files that are compiled to create the RE logic                                                                                                                                                               | Usually refers to some list `${re_sources_cpp}`                                   |
+| `RENDER_2D_SOURCES`          | Yes      | The list of 2D GUI files that composes the UI layer of the RE (must include `device_2D.lua` and `hdgui_2D.lua`)                                                                                                                        | Usually refers to some list `${re_sources_2d}`                                    |
+| `RE_SDK_ROOT`                | No       | The (absolute) path to the root of the RE SDK. It will default to `/Users/Shared/ReasonStudios/JukeboxSDK_${RE_SDK_VERSION}/SDK` on macOS and `C:/Users/Public/Documents/ReasonStudios/JukeboxSDK_${RE_SDK_VERSION}/SDK` on Windows 10 | `/local/Jukebox_4.3.0/SDK`                                                        |
+| `RE_2D_RENDER_ROOT`          | No       | The (absolute) path to the `RE2DRender` folder. It will default to `${RE_SDK_ROOT}/../RE2DRender`                                                                                                                                      | `/local/RE2DRender`                                                               |
+| `RE_2D_PREVIEW_ROOT`         | No       | The (absolute) path to the `RE2DPreview` folder. It will default to `${RE_SDK_ROOT}/../RE2DPreview`                                                                                                                                    | `/local/RE2DPreview`                                                              |
+| `INFO_LUA`                   | No       | The path to `info.lua` which by default is at the root                                                                                                                                                                                 | `defs/info.lua`                                                                   |
+| `MOTHERBOARD_DEF_LUA`        | No       | The path to `motherboard_def.lua` which by default is at the root                                                                                                                                                                      | `defs/motherboard_def.lua`                                                        |
+| `REALTIME_CONTROLLER_LUA`    | No       | The path to `realtime_controller.lua` which by default is at the root                                                                                                                                                                  | `defs/realtime_controller.lua`                                                    |
+| `DISPLAY_LUA`                | No       | The path to `display.lua` which by default is at the root (note that `display.lua` is only required if you have any custom displays)                                                                                                   | `src/lua/display.lua`                                                             |
+| `RESOURCES_DIR`              | No       | The path to the `Resources` folder which by default is at the root                                                                                                                                                                     | `i18n/Resources`                                                                  |
+| `INCLUDE_DIRECTORIES`        | No       | The list of directories that need to be included for searching for `.h` files. Note that it is a list of directories so it does not contain `-I`.                                                                                      | Usually refers to some list `${logging_include_dir}`                              |
+| `PYTHON3_EXECUTABLE`         | No       | The python 3 executable which is determined by default but you can override it here                                                                                                                                                    | `/opt/local/bin/python3`                                                          |
+| `NATIVE_BUILD_SOURCES`       | No       | The list of sources (cpp) files that are compiled ONLY during the native build (for example to add debugging/tracing libraries that cannot be compiled during the jbox build due to the sandbox)                                       | Usually refers to some list `${logging_sources}`                                  |
+| `NATIVE_BUILD_LIBS`          | No       | The list of libraries that are linked ONLY during the native build (for example to add debugging/tracing libraries that cannot be linked during the jbox build due to the sandbox)                                                     | `loguru`                                                                          |
+| `COMPILE_DEFINITIONS`        | No       | The list of compile definitions applied to native and jbox compilers. Note that `-D` should not be included.                                                                                                                           | `BOOST_MODE=1` `BOOST2`                                                           |
+| `NATIVE_COMPILE_DEFINITIONS` | No       | The list of compile definitions applied to native compiler only. Note that `-D` should not be included.                                                                                                                                | `BOOST_MODE=1` `BOOST2`                                                           |
+| `JBOX_COMPILE_DEFINITIONS`   | No       | The list of compile definitions applied to jbox compiler only. Note that `-D` should not be included.                                                                                                                                  | `BOOST_MODE=1` `BOOST2`                                                           |
+| `COMPILE_OPTIONS`            | No       | The list of compile options applied to native and jbox compilers.                                                                                                                                                                      | `-Wall`                                                                           |
+| `NATIVE_COMPILE_OPTIONS`     | No       | The list of compile options applied to native compiler only.                                                                                                                                                                           | `-Wall`                                                                           |
+| `JBOX_COMPILE_OPTIONS`       | No       | The list of compile options applied to jbox compiler only.                                                                                                                                                                             | `-Wall`                                                                           |
+| `NATIVE_LINK_OPTIONS`        | No       | The list of link options applied to native linker only. Note that there is no equivalent for jbox build.                                                                                                                               |                                                                                   |
+| `ENABLE_DEBUG_LOGGING`       | No       | Option to turn on debug logging (enable `JBOX_TRACE`). Equivalent to `NATIVE_COMPILE_OPTIONS DEBUG=1`                                                                                                                                  |                                                                                   |
+| `RE_RECON_EXECUTABLE`        | No       | The Recon executable which is determined by looking in a default location but you can override it here                                                                                                                                 | `"/Applications/Reason Recon 11 RESDK41 Logging.app/Contents/MacOS/Reason Recon"` |
+| `TEST_CASE_SOURCES`          | No       | The list of sources (cpp) files that contains the unit test cases.                                                                                                                                                                     | Usually refers to some list `${re_test_cpp}`                                      |
+| `TEST_SOURCES`               | No       | The list of sources (cpp) files that need to be compiled alongside the tests.                                                                                                                                                          | Usually refers to some list `${logging_sources}`                                  |
+| `TEST_INCLUDE_DIRECTORIES`   | No       | The list of directories that need to be included for searching for `.h` files for compiling tests. Note that it is a list of directories so it does not contain `-I`.                                                                  | Usually refers to some list `${RE_CPP_SRC_DIR}`                                   |
+| `TEST_COMPILE_DEFINITIONS`   | No       | The list of compile definitions for compiling the tests. Note that `-D` should not be included.                                                                                                                                        | `BOOST_MODE=1` `BOOST2`                                                           |
+| `TEST_COMPILE_OPTIONS`       | No       | The list of compile options applied for compiling the tests.                                                                                                                                                                           | `-Wall`                                                                           |
+| `TEST_LINK_LIBS`             | No       | The list of libraries that needs to be linked with the tests.                                                                                                                                                                          | `native-build` (note that it can be a target)                                     |
 
 Convenient script (`re.sh`/`re.bat`)
 ------------------------------------
@@ -215,28 +215,33 @@ Targets & Commands
 ------------------
 Here is a quick rundown of the list of targets and associated commands. Note that the _native_ targets handle changes properly and only rebuild what is necessary. 
 
-CMake Target                  | Script Command    | Description
------------------------------ | ----------------- | -----------
-`native-build`                | `build`           | Builds the plugin with the native toolchain (generate the `.dylib` or `.dll` only)
-`native-install-hi-res`       | `install`         | Builds the plugin with the native toolchain, generates the GUI (Hi Res) and installs the plugin in its default location (ready to be used in Recon) (not available if the SDK does not support Hi Res)
-`native-install-low-res`      | `-l install`      | Builds the plugin with the native toolchain, generates the GUI (Low Res) and installs the plugin in its default location (ready to be used in Recon)
-`native-install`              | `install`         | Shortcut to `native-install-hi-res` if the SDK supports Hi Res, `native-install-low-res` otherwise
-`native-run-test`             | `test`            | Runs the unit tests (only available for the native toolchain)
-`common-render-hi-res`        | `render`          | Generates the Hi Res GUI (not available if the SDK does not support Hi Res)
-`common-render-low-res`       | `-l render`       | Generates the Low Res GUI
-`common-render`               | `render`          | Shortcut to `common-render-hi-res` if the SDK supports Hi Res, `common-render-low-res` otherwise
-`common-preview`              | `preview`         | Generates a 2D preview of the device front, back, folded front and folded back (generated at full 5x resolution (3770x345*u), useful for shop images)
-`common-uninstall`            | `uninstall`       | Uninstalls the plugin from its default location (for example you can run: `./re.sh uninstall install`)
-`common-clean`                | `clean`           | Cleans any previous build (forces a rebuild of everything on next build)
-`common-validate`             | `validate`        | Runs Recon validation on the currently installed plugin. It does **not** install the plugin prior.  
-`jbox-l45-deployment-install` | `local45`         | Builds the (sandboxed) plugin with the jbox toolchain (`local45 Deployment`), generates the GUI and installs the plugin in its default location (ready to be used in Recon)
-`jbox-l45-testing-install`    | `-t local45`      | Builds the (sandboxed) plugin with the jbox toolchain (`local45 Testing`), generates the GUI and installs the plugin in its default location (ready to be used in Recon)
-`jbox-l45-debugging-install`  | `-d local45`      | Builds the (sandboxed) plugin with the jbox toolchain (`local45 Debugging`), generates the GUI and installs the plugin in its default location (ready to be used in Recon)
-`jbox-u45-build`              | `universal45`     | Builds the universal45 (`.u45`) package with the jbox toolchain ready to be uploaded to Reason servers
-`jbox-validate45`             | `validate45`      | Builds the (sandboxed) plugin with the jbox toolchain (`local45`) and runs Recon validation on it
+| CMake Target                  | Script Command | Description                                                                                                                                                                                            |
+|-------------------------------|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `native-build`                | `build`        | Builds the plugin with the native toolchain (generate the `.dylib` or `.dll` only)                                                                                                                     |
+| `native-install-hi-res`       | `install`      | Builds the plugin with the native toolchain, generates the GUI (Hi Res) and installs the plugin in its default location (ready to be used in Recon) (not available if the SDK does not support Hi Res) |
+| `native-install-low-res`      | `-l install`   | Builds the plugin with the native toolchain, generates the GUI (Low Res) and installs the plugin in its default location (ready to be used in Recon)                                                   |
+| `native-install`              | `install`      | Shortcut to `native-install-hi-res` if the SDK supports Hi Res, `native-install-low-res` otherwise                                                                                                     |
+| `native-run-test`             | `test`         | Runs the unit tests (only available for the native toolchain)                                                                                                                                          |
+| `common-render-hi-res`        | `render`       | Generates the Hi Res GUI (not available if the SDK does not support Hi Res)                                                                                                                            |
+| `common-render-low-res`       | `-l render`    | Generates the Low Res GUI                                                                                                                                                                              |
+| `common-render`               | `render`       | Shortcut to `common-render-hi-res` if the SDK supports Hi Res, `common-render-low-res` otherwise                                                                                                       |
+| `common-preview`              | `preview`      | Generates a 2D preview of the device front, back, folded front and folded back (generated at full 5x resolution (3770x345*u), useful for shop images)                                                  |
+| `common-uninstall`            | `uninstall`    | Uninstalls the plugin from its default location (for example you can run: `./re.sh uninstall install`)                                                                                                 |
+| `common-clean`                | `clean`        | Cleans any previous build (forces a rebuild of everything on next build)                                                                                                                               |
+| `common-validate`             | `validate`     | Runs Recon validation on the currently installed plugin. It does **not** install the plugin prior.                                                                                                     |
+| `jbox-l45-deployment-install` | `local45`      | Builds the (sandboxed) plugin with the jbox toolchain (`local45 Deployment`), generates the GUI and installs the plugin in its default location (ready to be used in Recon)                            |
+| `jbox-l45-testing-install`    | `-t local45`   | Builds the (sandboxed) plugin with the jbox toolchain (`local45 Testing`), generates the GUI and installs the plugin in its default location (ready to be used in Recon)                               |
+| `jbox-l45-debugging-install`  | `-d local45`   | Builds the (sandboxed) plugin with the jbox toolchain (`local45 Debugging`), generates the GUI and installs the plugin in its default location (ready to be used in Recon)                             |
+| `jbox-u45-build`              | `universal45`  | Builds the universal45 (`.u45`) package with the jbox toolchain ready to be uploaded to Reason servers                                                                                                 |
+| `jbox-validate45`             | `validate45`   | Builds the (sandboxed) plugin with the jbox toolchain (`local45`) and runs Recon validation on it                                                                                                      |
 
 > #### Note
 > 2021/10/30: Due to a caching issue with Recon 12 and Hi Res graphics, you can use `-Z` command line argument to delete the cache directory (this is a hack/workaround) 
+
+Options
+-------
+
+Check the [RECMakeOptions.cmake](cmake/RECMakeOptions.cmake) file for options that can be set **prior** to including this file.
 
 Understanding the different kinds of builds
 -------------------------------------------
@@ -276,13 +281,13 @@ Of course the plugin in the end will run in a sandbox so care must be taken to p
 
 ### Summary
 
- &nbsp;   | **local native** | **local jbox** | **universal**
----  | ---------------- | -------------- | -------------
-**Runs in**| Recon | Recon | Reason
-**Description** | Full power of C++ | Sandbox / C++ subset | Sandbox / C++ subset
-**CMake Build** | Invokes native build commands / toolchain | Invokes proprietary build system (`local45`) |  Invokes proprietary build system (`universal45`)
-**CMake Targets** | `native-build`, `native-install`, `native-run-test` | `jbox-l45-debugging-install`, `jbox-l45-testing-install`, `jbox-l45-deployment-install`, `jbox-validate45` | `jbox-u45-build`
-**Commands (`re.sh`)** | `build`, `install`, `test` | `local45`, `validate45` | `universal45`
+| &nbsp;                 | **local native**                                    | **local jbox**                                                                                             | **universal**                                    |
+|------------------------|-----------------------------------------------------|------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| **Runs in**            | Recon                                               | Recon                                                                                                      | Reason                                           |
+| **Description**        | Full power of C++                                   | Sandbox / C++ subset                                                                                       | Sandbox / C++ subset                             |
+| **CMake Build**        | Invokes native build commands / toolchain           | Invokes proprietary build system (`local45`)                                                               | Invokes proprietary build system (`universal45`) |
+| **CMake Targets**      | `native-build`, `native-install`, `native-run-test` | `jbox-l45-debugging-install`, `jbox-l45-testing-install`, `jbox-l45-deployment-install`, `jbox-validate45` | `jbox-u45-build`                                 |
+| **Commands (`re.sh`)** | `build`, `install`, `test`                          | `local45`, `validate45`                                                                                    | `universal45`                                    |
 
 Example Usage
 -------------
@@ -295,6 +300,10 @@ It is strongly recommended to check the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.3.9 - 2021/12/09
+
+- Added `RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION` option to be able to change the type of Hi Res build when the device is not fully Hi Res compliant (applies to custom display backgrounds).
+
 #### 1.3.8 - 2021/10/30
 
 - Added `-Z` command line option to the script to work around the graphics caching issue of Recon 12

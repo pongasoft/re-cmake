@@ -49,3 +49,10 @@ set(googletest_GIT_REPO "https://github.com/google/googletest" CACHE STRING "goo
 # release-1.11.0 => e2239ee6043f73722e7aa812a459f54a28552929
 #------------------------------------------------------------------------
 set(googletest_GIT_TAG "e2239ee6043f73722e7aa812a459f54a28552929" CACHE STRING "googletest git tag")
+
+#------------------------------------------------------------------------
+# Option for invoking RE2DRender for hi res build
+# Set to 'hi-res-only' by default. If the device does not fully support
+# hi-res (no HD custom display background), set this option to 'hi-res'
+#------------------------------------------------------------------------
+set(RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION "hi-res-only" CACHE STRING "Option for invoking RE2DRender for hi res build (hi-res or hi-res-only)")
