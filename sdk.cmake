@@ -14,16 +14,12 @@
 #
 # @author Yan Pujante
 
-cmake_minimum_required (VERSION 3.13)
+cmake_minimum_required(VERSION 3.17)
 
 # Making sure we are on macOS and Win10
 if(NOT (APPLE OR WIN32))
   message(FATAL_ERROR "Only macOS or Windows supported")
 endif()
-
-set(RE_CMAKE_MAJOR_VERSION 1)
-set(RE_CMAKE_MINOR_VERSION 3)
-set(RE_CMAKE_PATCH_VERSION 8)
 
 # Capturing this outside function call due to scope...
 set(BUILD45_SRC_DIR ${CMAKE_CURRENT_LIST_DIR})

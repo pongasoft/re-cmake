@@ -14,6 +14,10 @@
 #
 # @author Yan Pujante
 
+set(RE_CMAKE_MAJOR_VERSION 1)
+set(RE_CMAKE_MINOR_VERSION 4)
+set(RE_CMAKE_PATCH_VERSION 0)
+
 # Location of RE SDK: can be set when invoking cmake => cmake -D "RE_SDK_ROOT:PATH=/path/to/re_sdk"
 # or via -p option in configure.py script or in cmake-gui
 if(APPLE)
@@ -56,3 +60,9 @@ set(googletest_GIT_TAG "e2239ee6043f73722e7aa812a459f54a28552929" CACHE STRING "
 # hi-res (no HD custom display background), set this option to 'hi-res'
 #------------------------------------------------------------------------
 set(RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION "hi-res-only" CACHE STRING "Option for invoking RE2DRender for hi res build (hi-res or hi-res-only)")
+
+#------------------------------------------------------------------------
+# Git repo/tag for re-mock
+#------------------------------------------------------------------------
+set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
+set(re-mock_GIT_TAG "v1.0.0" CACHE STRING "re-cmake git tag")

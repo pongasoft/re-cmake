@@ -11,7 +11,7 @@ Features
 * completely isolated build (no polluting the source tree)
 * much faster builds (due to proper dependency management, no need to recompile everything all the time)
 * proper integration with IDEs for debugging (for example starting Recon from CLion in debug mode and putting a breakpoint in the source tree)
-* native toolchain builds allowing for non sandboxed builds for easy development (use of `std::string`, `std::cout`, etc...)
+* native toolchain builds allowing for non-sandboxed builds for easy development (use of `std::string`, `std::cout`, etc...)
 * easy to use script (`re.sh` for macOS, `re.bat` for Windows) to invoke all the various phases of the build so no need to remember long and complicated syntax
 
 Requirements
@@ -30,30 +30,38 @@ Quick Starting guide
 For the sake of keeping this project lean, it does not include any example, but you should check [re-blank-plugin](https://github.com/pongasoft/re-blank-plugin) which is the official example project for this framework.
 
 > #### Tip
-> If you want to easily create a blank plugin check the [Rack Extension - Quick Start](https://pongasoft.com/re-quickstart/index.html) tool.
+> If you want to easily create a blank plugin check the [Rack Extension - Quick Start](https://pongasoft.com/re-quickstart/index.html) tool which sets everything up for you.
 
-This project offers a main CMake file `sdk.cmake` which simply needs to be included in your `CMakeLists.txt` for your plugin and then you invoke `add_re_plugin`.
+This project offers a main CMake file `main.cmake` which simply needs to be included in your `CMakeLists.txt` for your plugin.
+
+You should then call:
+
+* `re_cmake_before_project_init()` **before** the `project()` call in your `CMakeLists.txt`
+* `re_cmake_init()` after `project()` and optionally provide a list of `INCLUDES`: `re-logging` (for logging) and/or `re-mock` (for unit testing)
+* finally, call `add_re_plugin`.
 
 ```
-# in CMakeLists.txt
+# Example assuming re-cmake is local (check re-blank-plugin for a better way)
+include(re-cmake/main.cmake)
 
-# If local (see official example for automatic download)
-include(re-cmake/sdk.cmake)
+# Initializes the proper toolchain
+re_cmake_before_project_init()
 
-...
+# defines the project
+project(MyProject)
+
+# initializes re-cmake and uses both re-logging and re-mock
+re_cmake_init(INCLUDES re-logging re-mock)
 
 # Call add_re_plugin to create the targets and script
 add_re_plugin(xxx)
-
 ```
 
 > #### Note
 > There are many ways to bring this framework into your own project and how you do it depends on your preferences and structure. Here are a few examples:
-> 1. `re-cmake` is local but "out of tree", somewhere on the user's system, for example where multiple projects share one instance of it. This would require to clone or copy this project somewhere.
+> 1. `re-cmake` is local but "out of tree", somewhere on the user's system, for example where multiple projects share one instance of it. This would require cloning or copying this project somewhere.
 > 2. `re-cmake` is local, but "in tree", within the RE project directory (or somewhere below), for example where using git submodules or git subtree, or even when just copied directly into the RE project (good for people who love 100% reproducible builds).
-> 3. `re-cmake` is remote, and fetched by CMake during the configure phase (which is the way the official example does it since you don't really have to worry about it)
-
-
+> 3. `re-cmake` is remote, and fetched by CMake during the `configure` phase (which is the way the official example does it since you don't really have to worry about it)
 
 #### Note about the RE SDK location
 
@@ -66,10 +74,20 @@ By default, the `RE2DRender` program needs to be unzipped and is expected to be 
 
 If you want to use the (optional) `preview` command, by default, the `RE2DPreview` program needs to be unzipped and is expected to be a sibling of `SDK` but this can also be provided as an argument to `add_re_plugin`.
 
+`re_cmake_before_project_init`
+------------------------------
+This macro should be called **before** defining the `project()` section in your `CMakeLists.txt`. It must be called before because it defines the proper toolchain.
+
+`re_cmake_init`
+---------------
+The macro initializes re-cmake and should be called after `project()`. It optionally takes a list of `INCLUDES` to include additional frameworks:
+
+* `re-logging` is a logging framework (based on loguru) to easily add debugging/checks to the plugin under development. It defines a variable `re-logging_SOURCES` which needs to be added to the `NATIVE_BUILD_SOURCES` argument (see `add_re_plugin`)
+* `re-mock` is a [framework](https://github.com/pongasoft/re-mock) that implements the full Jukebox API in order to help in writing unit test for the plugin under development. This call defines a variable `re-mock_LIBRARY_NAME` which needs to be added to the `TEST_LINK_LIBS` argument (see `add_re_plugin`)
 
 `add_re_plugin`
 ---------------
-The framework exposes a single function to create the plugin targets and script. It can take many arguments, very few being actually required
+The framework exposes a function to create the plugin targets and script. It can take many arguments, very few being actually required
 
 ```
 add_re_plugin(
@@ -241,7 +259,7 @@ Here is a quick rundown of the list of targets and associated commands. Note tha
 Options
 -------
 
-Check the [RECMakeOptions.cmake](cmake/RECMakeOptions.cmake) file for options that can be set **prior** to including this file.
+Check the [RECMakeOptions.cmake](cmake/RECMakeOptions.cmake) file for options that can be set **prior** to calling `re_cmake_before_project_init()`.
 
 Understanding the different kinds of builds
 -------------------------------------------
@@ -292,14 +310,23 @@ Of course the plugin in the end will run in a sandbox so care must be taken to p
 Example Usage
 -------------
 
-It is strongly recommended to check the [re-blank-plugin](https://github.com/pongasoft/re-blank-plugin) project which is the official example/documentation for this framework. It shows how to use it properly including:
+It is strongly recommended checking the [re-blank-plugin](https://github.com/pongasoft/re-blank-plugin) project which is the official example/documentation for this framework. It shows how to use it properly including:
 
 - `CMakeLists.txt` demonstrating how to include and invoke the framework while allowing the user of the project to configure it (like specifying the location of the SDK)
-- `re-cmake.cmake` which is a CMake script to automatically download this framework (you specify the framework version via `RE_CMAKE_GIT_TAG`)
+- `re-cmake.cmake` which is a CMake script to automatically download this framework (you specify the framework version via `re-cmake_GIT_TAG`)
 - `configure.py` which is a script abstracting how to invoke `cmake` to configure the project and provides a useful help/usage documentation
 
 Release notes
 -------------
+#### 1.4.0 - 2021/xx/xx
+
+- Introduced `main.cmake` with convenient macros to make writing the `CMakeLists.txt` file for the plugin easier and less error-prone
+- Added `re-logging` directly in this project in order to provide central updates
+- Added support for `re-mock`
+
+> #### Note
+> This version is backward compatible so if your project already includes `sdk.cmake` directly, you do not have to change it
+
 #### 1.3.9 - 2021/12/09
 
 - Added `RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION` option to be able to change the type of Hi Res build when the device is not fully Hi Res compliant (applies to custom display backgrounds).
