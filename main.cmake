@@ -58,6 +58,7 @@ macro(re_cmake_include)
   if(ARG_re-logging)
     set(re-logging_ROOT_DIR "${re-cmake_ROOT_DIR}/re-logging")
     set(re-logging_SOURCE_DIR "${re-logging_ROOT_DIR}/src/cpp/logging")
+    set(re-logging_INCLUDE_DIRS "${re-logging_SOURCE_DIR}")
 
     # Defines the files to include for logging (they will be included in the Recon build ONLY)
     set(re-logging_SOURCES

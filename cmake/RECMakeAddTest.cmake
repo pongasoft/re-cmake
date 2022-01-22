@@ -50,7 +50,7 @@ function(re_cmake_add_test)
   #------------------------------------------------------------------------
   add_custom_target("native-run-test"
       COMMAND ${CMAKE_COMMAND} -E echo "Running tests using $<TARGET_FILE:${target}>"
-      COMMAND "${CMAKE_CTEST_COMMAND}" -C $<CONFIG>
+      COMMAND "${CMAKE_CTEST_COMMAND}" -C $<CONFIG> --output-on-failure
       DEPENDS "${target}"
       )
 endfunction()

@@ -8,7 +8,7 @@ while [ -h "$SOURCE" ]; do
   [[ ${SOURCE} != /* ]] && SOURCE="$DIR/$SOURCE"
 done
 BASEDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
-cd ${BASEDIR}
+cd "${BASEDIR}"
 
 PYTHON_EXE="@Python3_EXECUTABLE@"
 

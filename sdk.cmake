@@ -33,6 +33,20 @@ if(RE_CMAKE_ENABLE_TESTING)
   enable_testing()
 endif()
 
+#------------------------------------------------------------------------
+# Converts a path to a cpp friendly path
+#------------------------------------------------------------------------
+function(to_cpp_native_path PATH CPP_NATIVE_PATH)
+  if(APPLE)
+    file(TO_NATIVE_PATH "${PATH}" tmp)
+    string(REPLACE "\\ " " " cpp_tmp "${tmp}")
+    set("${CPP_NATIVE_PATH}" "${cpp_tmp}" PARENT_SCOPE)
+  else()
+    file(TO_NATIVE_PATH "${PATH}" tmp)
+    set("${CPP_NATIVE_PATH}" "${tmp}" PARENT_SCOPE)
+  endif()
+endfunction()
+
 ##########################################################
 # Main method called to add/create the RE plugin
 ##########################################################
@@ -167,10 +181,10 @@ function(add_re_plugin)
 
   # Generate the re_cmake_build.h file
   set(GENERATED_FILES_DIR "${CMAKE_BINARY_DIR}/generated")
-  file(TO_NATIVE_PATH "${CMAKE_CURRENT_LIST_DIR}" PROJECT_DIR_NATIVE_PATH)
-  file(TO_NATIVE_PATH "${ARG_MOTHERBOARD_DEF_LUA}" MOTHERBOARD_DEF_LUA_NATIVE_PATH)
-  file(TO_NATIVE_PATH "${ARG_REALTIME_CONTROLLER_LUA}" REALTIME_CONTROLLER_LUA_NATIVE_PATH)
-  file(TO_NATIVE_PATH "${ARG_RE_SDK_ROOT}" RE_SDK_ROOT_NATIVE_PATH)
+  to_cpp_native_path("${CMAKE_CURRENT_LIST_DIR}" PROJECT_DIR_NATIVE_PATH)
+  to_cpp_native_path("${ARG_MOTHERBOARD_DEF_LUA}" MOTHERBOARD_DEF_LUA_NATIVE_PATH)
+  to_cpp_native_path("${ARG_REALTIME_CONTROLLER_LUA}" REALTIME_CONTROLLER_LUA_NATIVE_PATH)
+  to_cpp_native_path("${ARG_RE_SDK_ROOT}" RE_SDK_ROOT_NATIVE_PATH)
   configure_file("${BUILD45_SRC_DIR}/re_cmake_build.h.in" "${GENERATED_FILES_DIR}/re_cmake_build.h")
   list(APPEND ARG_INCLUDE_DIRECTORIES "${GENERATED_FILES_DIR}")
 
