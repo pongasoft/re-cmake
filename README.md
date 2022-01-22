@@ -318,11 +318,12 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
-#### 1.4.0 - 2021/xx/xx
+#### 1.4.0 - 2022/01/22
 
 - Introduced `main.cmake` with convenient macros to make writing the `CMakeLists.txt` file for the plugin easier and less error-prone
 - Added `re-logging` directly in this project in order to provide central updates
 - Added support for `re-mock`
+- Fixed issue with spaces in path
 
 > #### Note
 > This version is backward compatible so if your project already includes `sdk.cmake` directly, you do not have to change it
