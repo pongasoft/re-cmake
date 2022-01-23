@@ -1861,6 +1861,19 @@ namespace loguru
 				"Failed to install handler for " LOGURU_FMT(s) "", s.name);
 		}
 	}
+
+//------------------------------------------------------------------------
+// init_for_test
+//------------------------------------------------------------------------
+void init_for_test(char const *iPrefix)
+{
+  loguru::g_preamble_thread = false;
+//  loguru::g_preamble_prefix = iPrefix;
+  loguru::set_fatal_handler([](const loguru::Message& message) {
+    throw std::runtime_error(std::string(message.prefix) + message.message);
+  });
+}
+
 } // namespace loguru
 
 #endif // _WIN32
