@@ -318,6 +318,13 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.4.1 - 2022/01/23
+
+- Added `JBOX_LOGVALUES` (simpler api than `JBOX_TRACEVALUES`)
+- Added `loguru::init_for_re` to make loguru output nicer for Rack Extensions (replace (useless) thread by RE name)
+- Added `loguru::init_for_test` to make loguru throw exception instead of aborting when running tests
+- Added generic `loguru::add_preamble_handler` to display any kind of information when logging 
+
 #### 1.4.0 - 2022/01/22
 
 - Introduced `main.cmake` with convenient macros to make writing the `CMakeLists.txt` file for the plugin easier and less error-prone

@@ -29,7 +29,9 @@
 #ifndef LOGURU_HAS_BEEN_IMPLEMENTED
 #define LOGURU_HAS_BEEN_IMPLEMENTED
 
-#define LOGURU_PREAMBLE_WIDTH (53 + LOGURU_THREADNAME_WIDTH + LOGURU_FILENAME_WIDTH)
+#ifndef LOGURU_PREAMBLE_WIDTH
+#define LOGURU_PREAMBLE_WIDTH 256
+#endif
 
 #undef min
 #undef max
@@ -197,6 +199,8 @@ namespace loguru
 	static StringPairList        s_user_stack_cleanups;
 	static bool                  s_strip_file_path = true;
 	static std::atomic<unsigned> s_stderr_indentation { 0 };
+
+  static std::unique_ptr<preamble_handler_t> s_preambles[8]{};
 
 	// For periodic flushing:
 	static std::thread* s_flush_thread   = nullptr;
@@ -843,7 +847,24 @@ namespace loguru
 		on_callback_change();
 	}
 
-	// Returns a custom verbosity name if one is available, or nullptr.
+bool add_preamble_handler(
+  int                                 position, // [0-7]
+  std::unique_ptr<preamble_handler_t> preamble_handler)
+{
+  if(position >= 0 && position <= 7)
+  {
+    std::lock_guard<std::recursive_mutex> lock(s_mutex);
+    s_preambles[position] = std::move(preamble_handler);
+    return true;
+  }
+  else
+  {
+    LOG_F(ERROR, "Failed to add preamble handler: position must be [0-7]");
+    return false;
+  }
+}
+
+  // Returns a custom verbosity name if one is available, or nullptr.
 	// See also set_verbosity_to_name_callback.
 	const char* get_verbosity_name(Verbosity verbosity)
 	{
@@ -1155,28 +1176,60 @@ namespace loguru
 	{
 		if (out_buff_size == 0) { return; }
 		out_buff[0] = '\0';
-		long pos = 0;
+		size_t pos = 0;
+    size_t preamble = 0;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->header(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_date && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "date       ");
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->header(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_time && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "time         ");
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->header(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_uptime && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "( uptime  ) ");
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->header(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_thread && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "[%-*s]", LOGURU_THREADNAME_WIDTH, " thread name/id");
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->header(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_file && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "%*s:line  ", LOGURU_FILENAME_WIDTH, "file");
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->header(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_verbose && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "   v");
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->header(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_pipe && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "| ");
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->header(out_buff + pos, out_buff_size - pos);
+    }
 	}
 
 	static void print_preamble(char* out_buff, size_t out_buff_size, Verbosity verbosity, const char* file, unsigned line)
@@ -1207,37 +1260,69 @@ namespace loguru
 			snprintf(level_buff, sizeof(level_buff) - 1, "% 4d", verbosity);
 		}
 
-		long pos = 0;
+		size_t pos = 0;
+    size_t preamble = 0;
 
-		if (g_preamble_date && pos < out_buff_size) {
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->entry(out_buff + pos, out_buff_size - pos);
+    }
+    if (g_preamble_date && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "%04d-%02d-%02d ",
 				             1900 + time_info.tm_year, 1 + time_info.tm_mon, time_info.tm_mday);
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->entry(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_time && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "%02d:%02d:%02d.%03lld ",
 			               time_info.tm_hour, time_info.tm_min, time_info.tm_sec, ms_since_epoch % 1000);
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->entry(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_uptime && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "(%8.3fs) ",
 			               uptime_sec);
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->entry(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_thread && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "[%-*s]",
 			               LOGURU_THREADNAME_WIDTH, thread_name);
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->entry(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_file && pos < out_buff_size) {
 			char shortened_filename[LOGURU_FILENAME_WIDTH + 1];
 			snprintf(shortened_filename, LOGURU_FILENAME_WIDTH + 1, "%s", file);
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "%*s:%-5u ",
 			               LOGURU_FILENAME_WIDTH, shortened_filename, line);
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->entry(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_verbose && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "%4s",
 			               level_buff);
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->entry(out_buff + pos, out_buff_size - pos);
+    }
 		if (g_preamble_pipe && pos < out_buff_size) {
 			pos += snprintf(out_buff + pos, out_buff_size - pos, "| ");
 		}
+    preamble++;
+    if(s_preambles[preamble] && pos < out_buff_size) {
+      pos += s_preambles[preamble]->entry(out_buff + pos, out_buff_size - pos);
+    }
 	}
 
 	// stack_trace_skip is just if verbosity == FATAL.
@@ -1862,16 +1947,57 @@ namespace loguru
 		}
 	}
 
+  struct static_string_preamble_handler_t : public preamble_handler_t
+  {
+    static_string_preamble_handler_t(char const *iHeader, char const *iEntry) :
+      fHeader{iHeader ? iHeader : ""}, fEntry{iEntry ? iEntry : ""} {}
+
+    size_t header(char *buffer, size_t buffer_size) override
+    {
+      if(fHeader.empty())
+        return 0;
+      else
+        return snprintf(buffer, buffer_size, "%-*s", static_cast<int>(std::max(fHeader.size(), fEntry.size())), fHeader.c_str());
+    }
+
+    size_t entry(char *buffer, size_t buffer_size) override
+    {
+      if(fEntry.empty())
+        return 0;
+      else
+        return snprintf(buffer, buffer_size, "%s", fEntry.c_str());
+    }
+
+  private:
+    std::string fHeader;
+    std::string fEntry;
+  };
+
 //------------------------------------------------------------------------
 // init_for_test
 //------------------------------------------------------------------------
 void init_for_test(char const *iPrefix)
 {
-  loguru::g_preamble_thread = false;
-//  loguru::g_preamble_prefix = iPrefix;
+  if(iPrefix)
+  {
+    loguru::g_preamble_thread = false;
+    loguru::add_preamble_handler(4, std::make_unique<static_string_preamble_handler_t>(iPrefix, iPrefix));
+  }
   loguru::set_fatal_handler([](const loguru::Message& message) {
     throw std::runtime_error(std::string(message.prefix) + message.message);
   });
+}
+
+//------------------------------------------------------------------------
+// init_for_re
+//------------------------------------------------------------------------
+void init_for_re(char const *iREName)
+{
+  loguru::g_preamble_thread = false; // thread is useless in the context of REs!
+  if(iREName)
+  {
+    loguru::add_preamble_handler(4, std::make_unique<static_string_preamble_handler_t>("[Device]", iREName));
+  }
 }
 
 } // namespace loguru

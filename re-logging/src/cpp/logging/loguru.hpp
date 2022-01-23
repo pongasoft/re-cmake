@@ -245,6 +245,8 @@ Website: www.ilikebigbits.com
 
 // --------------------------------------------------------------------
 
+#include <memory>
+
 namespace loguru
 {
 	// Simple RAII ownership of a char*.
@@ -375,7 +377,25 @@ namespace loguru
 	LOGURU_EXPORT extern bool      g_preamble_verbose; // The verbosity field
 	LOGURU_EXPORT extern bool      g_preamble_pipe; // The pipe symbol right before the message
 
-	// May not throw!
+  struct preamble_handler_t
+  {
+    // Render the header in the buffer and return the number of chars written
+    virtual size_t header(char *buffer, size_t buffer_size) = 0;
+
+    // Render the entry in the buffer and return the number of chars written
+    virtual size_t entry(char *buffer, size_t buffer_size) = 0;
+
+    virtual ~preamble_handler_t() = default;
+  };
+
+  // Add a preamble handler. The position refers to where it is located: 0 means before g_preamble_date, 1 means
+  // before g_preamble_time, etc...
+  LOGURU_EXPORT
+  bool add_preamble_handler(
+    int                      position, // [0-7]
+    std::unique_ptr<preamble_handler_t> preamble_handler);
+
+  // May not throw!
 	typedef void (*log_handler_t)(void* user_data, const Message& message);
 	typedef void (*close_handler_t)(void* user_data);
 	typedef void (*flush_handler_t)(void* user_data);

@@ -22,6 +22,16 @@
 TEST(Logging, init_for_test)
 {
   // init_for_test changes abort into exception that can be caught
-  loguru::init_for_test();
+  loguru::init_for_test("[Logging.init_for_test]");
   ASSERT_THROW(loguru::log_and_abort(0, "test", __FILE__, __LINE__), std::runtime_error);
+  DLOG_F(INFO, "output 1");
+  DLOG_F(INFO, "output 2");
+}
+
+TEST(Logging, init_for_re)
+{
+  // init_for_re displays the name of the re
+  loguru::init_for_re("[My RE]");
+  DLOG_F(INFO, "output 1");
+  DLOG_F(INFO, "output 2");
 }

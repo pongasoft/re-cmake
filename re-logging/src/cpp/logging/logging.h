@@ -56,13 +56,9 @@ inline void JBox_LogValues(const char iFile[], TJBox_Int32 iLine, char const *iM
 namespace loguru {
 /**
  * This function can be called when the device is created to make loguru output nicer (essentially replaces
- * the name of the thread which is useless, by the name of the rack extension which can be useful when you
- * have different REs using loguru) */
-inline void init_for_re(char const *iREName = nullptr)
-{
-  loguru::g_preamble_thread = false;
-//  loguru::g_preamble_prefix = iREName;
-}
+ * the name of the thread which is useless, by the name of the rack extension which can be useful when there
+ * are different REs using loguru) */
+void init_for_re(char const *iREName = nullptr);
 
 /**
  * This function can be used from tests to replace loguru aborts with exception (which can be checked) */
