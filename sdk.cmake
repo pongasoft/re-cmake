@@ -194,6 +194,7 @@ function(add_re_plugin)
   # Optionally setup testing
   if(RE_CMAKE_ENABLE_TESTING AND DEFINED ARG_TEST_CASE_SOURCES)
     include(RECMakeAddTest)
+    set(googletest_ROOT_DIR "${googletest_ROOT_DIR}" PARENT_SCOPE)
     internal_add_plugin_library("native-test-lib" "STATIC")
     set_target_properties("native-test-lib" PROPERTIES EXCLUDE_FROM_ALL TRUE)
     re_cmake_add_test()
