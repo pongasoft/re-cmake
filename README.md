@@ -318,6 +318,10 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.4.2 - 2022/01/24
+
+- Extracted `re-logging` into its own project
+
 #### 1.4.1 - 2022/01/23
 
 - Added `JBOX_LOGVALUES` (simpler api than `JBOX_TRACEVALUES`)

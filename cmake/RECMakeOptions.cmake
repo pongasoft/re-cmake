@@ -62,7 +62,13 @@ set(googletest_GIT_TAG "e2239ee6043f73722e7aa812a459f54a28552929" CACHE STRING "
 set(RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION "hi-res-only" CACHE STRING "Option for invoking RE2DRender for hi res build (hi-res or hi-res-only)")
 
 #------------------------------------------------------------------------
+# Git repo/tag for re-logging
+#------------------------------------------------------------------------
+set(re-logging_GIT_REPO "https://github.com/pongasoft/re-logging" CACHE STRING "re-logging git repository url")
+set(re-logging_GIT_TAG "v1.0.0" CACHE STRING "re-logging git tag")
+
+#------------------------------------------------------------------------
 # Git repo/tag for re-mock
 #------------------------------------------------------------------------
 set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
-set(re-mock_GIT_TAG "v1.0.0" CACHE STRING "re-cmake git tag")
+set(re-mock_GIT_TAG "v1.0.0" CACHE STRING "re-mock git tag")

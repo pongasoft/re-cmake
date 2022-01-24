@@ -56,17 +56,9 @@ macro(re_cmake_include)
   )
 
   if(ARG_re-logging)
-    set(re-logging_ROOT_DIR "${re-cmake_ROOT_DIR}/re-logging")
-    set(re-logging_SOURCE_DIR "${re-logging_ROOT_DIR}/src/cpp/logging")
-    set(re-logging_INCLUDE_DIRS "${re-logging_SOURCE_DIR}")
-
-    # Defines the files to include for logging (they will be included in the Recon build ONLY)
-    set(re-logging_SOURCES
-        ${re-logging_SOURCE_DIR}/logging.h
-        ${re-logging_SOURCE_DIR}/loguru.cpp
-        ${re-logging_SOURCE_DIR}/loguru.hpp
-        )
-    message(STATUS "Using re-logging from local ${re-logging_ROOT_DIR}")
+    include("${re-cmake_ROOT_DIR}/cmake/RECMakeFetchContent.cmake")
+    re_cmake_fetch_content(NAME re-logging)
+    include("${re-logging_ROOT_DIR}/re-logging.cmake")
   endif()
 
   if(ARG_re-mock)
