@@ -318,6 +318,10 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.4.3 - 2022/02/01
+
+- Fixes for Win 10
+
 #### 1.4.2 - 2022/01/24
 
 - Extracted `re-logging` into its own project

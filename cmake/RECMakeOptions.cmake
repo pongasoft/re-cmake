@@ -65,10 +65,10 @@ set(RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION "hi-res-only" CACHE STRING "Option for i
 # Git repo/tag for re-logging
 #------------------------------------------------------------------------
 set(re-logging_GIT_REPO "https://github.com/pongasoft/re-logging" CACHE STRING "re-logging git repository url")
-set(re-logging_GIT_TAG "v1.0.0" CACHE STRING "re-logging git tag")
+set(re-logging_GIT_TAG "v1.0.1" CACHE STRING "re-logging git tag")
 
 #------------------------------------------------------------------------
 # Git repo/tag for re-mock
 #------------------------------------------------------------------------
 set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
-set(re-mock_GIT_TAG "v1.0.0" CACHE STRING "re-mock git tag")
+set(re-mock_GIT_TAG "v1.0.1" CACHE STRING "re-mock git tag")
