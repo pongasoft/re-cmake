@@ -20,8 +20,8 @@ Requirements
 * This project requires CMake (minimum version 3.13) to be properly installed (`cmake` executable must be in your `PATH`)
 * This project currently expects RE SDK 4.3.0 (Hi Res support), 4.2.0 or 4.1.0 to be installed on the machine (it will not download it for you)
 * Due to the RE SDK requirements, this project also requires python 3 to be installed
-* It has been tested on macOS 10.14.6 with Xcode 9 installed
-* It has been tested on macOS 11.1 with Xcode 12.3 installed and Apple Silicon (forces `x86_64` build to compile and run)
+* It has been tested on macOS Big Sur (11.7) / Xcode 13.2.1 (requires macOS 15+)
+* It has been tested on macOS 12.6 / Xcode 13.3 installed and Apple Silicon (forces `x86_64` build to compile and run)
 * It has been tested on Windows 10 with Visual Studio 16 2019 build tools
 
 Quick Starting guide
@@ -318,6 +318,11 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.4.4 - 2022/10/29
+
+- Uses re-mock 1.2.0 (better error reporting / bug fixes)
+- Due to upgrade to Big Sur (macOS 11.7), this is now the macOS version that re-cmake is tested on (although it is expected to work on 10.15+).
+
 #### 1.4.3 - 2022/02/01
 
 - Fixes for Win 10
