@@ -14,7 +14,7 @@
 #
 # @author Yan Pujante
 
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.24)
 
 # Making sure we are on macOS and Win10
 if(NOT (APPLE OR WIN32))
@@ -56,7 +56,8 @@ function(add_re_plugin)
   # Argument parsing / default values
   #############################################
   set(options ENABLE_DEBUG_LOGGING)
-  set(oneValueArgs RE_SDK_VERSION RE_SDK_ROOT RE_2D_RENDER_ROOT RE_2D_PREVIEW_ROOT INFO_LUA MOTHERBOARD_DEF_LUA REALTIME_CONTROLLER_LUA DISPLAY_LUA RESOURCES_DIR PYTHON3_EXECUTABLE RE_RECON_EXECUTABLE)
+  set(oneValueArgs RE_SDK_VERSION RE_SDK_ROOT RE_2D_RENDER_ROOT RE_2D_PREVIEW_ROOT INFO_LUA MOTHERBOARD_DEF_LUA REALTIME_CONTROLLER_LUA DISPLAY_LUA
+                   RESOURCES_DIR PYTHON3_EXECUTABLE RE_RECON_EXECUTABLE RE_EDIT_EXECUTABLE)
   set(multiValueArgs BUILD_SOURCES RENDER_2D_SOURCES INCLUDE_DIRECTORIES COMPILE_DEFINITIONS COMPILE_OPTIONS
                      JBOX_COMPILE_DEFINITIONS JBOX_COMPILE_OPTIONS
                      NATIVE_BUILD_SOURCES NATIVE_BUILD_LIBS NATIVE_COMPILE_DEFINITIONS NATIVE_COMPILE_OPTIONS NATIVE_LINK_OPTIONS
@@ -217,6 +218,9 @@ function(add_re_plugin)
 
   # Add validation targets
   internal_add_validation()
+
+  # Add edit target
+  internal_add_edit()
 
   # Copy the convenient script wrapper(s)
   if(APPLE)
@@ -617,5 +621,37 @@ function(internal_add_validation)
         COMMAND ${CMAKE_COMMAND} --build . --target common-validate
         DEPENDS jbox-l45-deployment-install
         )
+  endif()
+endfunction()
+
+##########################################################
+# Internal function to add edit targets
+##########################################################
+function(internal_add_edit)
+  # Determine RE Edit executable
+  if(ARG_RE_EDIT_EXECUTABLE)
+    set(RE_EDIT_EXECUTABLE "${ARG_RE_EDIT_EXECUTABLE}")
+  else()
+    find_program(
+        RE_EDIT_EXECUTABLE
+        NAMES "RE Edit"
+        PATHS "/Applications" "c:/Program Files/pongasoft"
+    )
+  endif()
+
+  if("${RE_EDIT_EXECUTABLE}" STREQUAL "RE_EDIT_EXECUTABLE-NOTFOUND")
+    add_custom_target(common-edit
+        COMMAND ${CMAKE_COMMAND} -E echo "'edit' cannot run because RE Edit executable was not found in its default location. To fix this issue you can either install/move RE Edit from https://pongasoft.com/re-edit/ into its default location or provide its location via RE_EDIT_EXECUTABLE argument."
+        )
+  else()
+    message(VERBOSE "RE_EDIT_EXECUTABLE=${RE_EDIT_EXECUTABLE}")
+
+    #############################################
+    # common-edit target runs edit without any dependency
+    #############################################
+    add_custom_target(common-edit
+        COMMAND "${RE_EDIT_EXECUTABLE}" "\"${CMAKE_CURRENT_LIST_DIR}/info.lua\""
+        )
+
   endif()
 endfunction()

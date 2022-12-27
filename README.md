@@ -218,6 +218,7 @@ Commands
   ---- Common commands ----
   clean       : clean all builds
   render      : runs RE2DRender to generate the GUI (necessary for running in Recon)
+  edit        : runs RE Edit to edit the device (UI)
   preview     : runs RE2DPreview to generate the device preview (useful for shop images)
   uninstall   : deletes the installed RE
   validate    : runs the Recon validate process on the currently installed plugin
@@ -246,6 +247,7 @@ Here is a quick rundown of the list of targets and associated commands. Note tha
 | `common-preview`              | `preview`      | Generates a 2D preview of the device front, back, folded front and folded back (generated at full 5x resolution (3770x345*u), useful for shop images)                                                  |
 | `common-uninstall`            | `uninstall`    | Uninstalls the plugin from its default location (for example you can run: `./re.sh uninstall install`)                                                                                                 |
 | `common-clean`                | `clean`        | Cleans any previous build (forces a rebuild of everything on next build)                                                                                                                               |
+| `common-edit`                 | `edit`         | Runs [RE Edit](https://pongasoft.com/re-edit/) for this device                                                                                                                                         |
 | `common-validate`             | `validate`     | Runs Recon validation on the currently installed plugin. It does **not** install the plugin prior.                                                                                                     |
 | `jbox-l45-deployment-install` | `local45`      | Builds the (sandboxed) plugin with the jbox toolchain (`local45 Deployment`), generates the GUI and installs the plugin in its default location (ready to be used in Recon)                            |
 | `jbox-l45-testing-install`    | `-t local45`   | Builds the (sandboxed) plugin with the jbox toolchain (`local45 Testing`), generates the GUI and installs the plugin in its default location (ready to be used in Recon)                               |
@@ -318,6 +320,14 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.5.0 - 2023/01/02
+
+- Added `edit` command (which uses [RE Edit](https://pongasoft.com/re-edit/))
+- Bumped CMake minimum version to 3.24
+- Uses re-mock 1.3.2
+- Uses GoogleTest 1.12.1
+- Added a new `DOWNLOAD_URL` option for `re_cmake_fetch_content` to avoid downloading the whole git history
+
 #### 1.4.4 - 2022/10/29
 
 - Uses re-mock 1.2.0 (better error reporting / bug fixes)

@@ -47,6 +47,7 @@ Commands
   clean       : clean all builds
   render      : runs RE2DRender to generate the GUI (necessary for running in Recon)
   preview     : runs RE2DPreview to generate the device preview (useful for shop images)
+  edit        : runs RE Edit to edit the device (UI)
   uninstall   : deletes the installed RE
   validate    : runs the Recon validate process on the currently installed plugin
 
@@ -115,6 +116,7 @@ available_commands = {
     'clean':       'common-clean',
     'render':      f'common-render-{gui_type}',
     'preview':     'common-preview',
+    'edit':        'common-edit',
     'uninstall':   'common-uninstall',
     'validate':    'common-validate',
 

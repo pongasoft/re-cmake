@@ -50,9 +50,13 @@ set(googletest_GIT_REPO "https://github.com/google/googletest" CACHE STRING "goo
 
 #------------------------------------------------------------------------
 # The git tag for googletest
-# release-1.11.0 => e2239ee6043f73722e7aa812a459f54a28552929
 #------------------------------------------------------------------------
-set(googletest_GIT_TAG "e2239ee6043f73722e7aa812a459f54a28552929" CACHE STRING "googletest git tag")
+set(googletest_GIT_TAG "release-1.12.1" CACHE STRING "googletest git tag")
+
+#------------------------------------------------------------------------
+# The download URL for googletest
+#------------------------------------------------------------------------
+set(googletest_DOWNLOAD_URL "${googletest_GIT_REPO}/archive/refs/tags/${googletest_GIT_TAG}.zip" CACHE STRING "googletest download url" FORCE)
 
 #------------------------------------------------------------------------
 # Option for invoking RE2DRender for hi res build
@@ -66,9 +70,11 @@ set(RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION "hi-res-only" CACHE STRING "Option for i
 #------------------------------------------------------------------------
 set(re-logging_GIT_REPO "https://github.com/pongasoft/re-logging" CACHE STRING "re-logging git repository url")
 set(re-logging_GIT_TAG "v1.0.1" CACHE STRING "re-logging git tag")
+set(re-logging_DOWNLOAD_URL "${re-logging_GIT_REPO}/archive/refs/tags/${re-logging_GIT_TAG}.zip" CACHE STRING "re-logging download url" FORCE)
 
 #------------------------------------------------------------------------
 # Git repo/tag for re-mock
 #------------------------------------------------------------------------
 set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
-set(re-mock_GIT_TAG "v1.2.0" CACHE STRING "re-mock git tag")
+set(re-mock_GIT_TAG "v1.3.2" CACHE STRING "re-mock git tag")
+set(re-mock_DOWNLOAD_URL "${re-mock_GIT_REPO}/archive/refs/tags/${re-mock_GIT_TAG}.zip" CACHE STRING "re-mock download url" FORCE)

@@ -14,7 +14,7 @@
 #
 # @author Yan Pujante
 
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.24)
 
 set(re-cmake_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
