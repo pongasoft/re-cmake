@@ -15,8 +15,8 @@
 # @author Yan Pujante
 
 set(RE_CMAKE_MAJOR_VERSION 1)
-set(RE_CMAKE_MINOR_VERSION 4)
-set(RE_CMAKE_PATCH_VERSION 4)
+set(RE_CMAKE_MINOR_VERSION 5)
+set(RE_CMAKE_PATCH_VERSION 1)
 
 # Location of RE SDK: can be set when invoking cmake => cmake -D "RE_SDK_ROOT:PATH=/path/to/re_sdk"
 # or via -p option in configure.py script or in cmake-gui
@@ -76,5 +76,5 @@ set(re-logging_DOWNLOAD_URL "${re-logging_GIT_REPO}/archive/refs/tags/${re-loggi
 # Git repo/tag for re-mock
 #------------------------------------------------------------------------
 set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
-set(re-mock_GIT_TAG "v1.3.2" CACHE STRING "re-mock git tag")
+set(re-mock_GIT_TAG "v1.4.0" CACHE STRING "re-mock git tag")
 set(re-mock_DOWNLOAD_URL "${re-mock_GIT_REPO}/archive/refs/tags/${re-mock_GIT_TAG}.zip" CACHE STRING "re-mock download url" FORCE)
