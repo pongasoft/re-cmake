@@ -320,6 +320,10 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.5.2 - 2023/04/14
+
+- Uses re-mock 1.4.1 (fixes multi bindings/same source in `rtc_bindings`)
+
 #### 1.5.1 - 2023/04/11
 
 - Uses re-mock 1.4.0
