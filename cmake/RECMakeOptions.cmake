@@ -15,8 +15,8 @@
 # @author Yan Pujante
 
 set(RE_CMAKE_MAJOR_VERSION 1)
-set(RE_CMAKE_MINOR_VERSION 5)
-set(RE_CMAKE_PATCH_VERSION 2)
+set(RE_CMAKE_MINOR_VERSION 6)
+set(RE_CMAKE_PATCH_VERSION 0)
 
 # Location of RE SDK: can be set when invoking cmake => cmake -D "RE_SDK_ROOT:PATH=/path/to/re_sdk"
 # or via -p option in configure.py script or in cmake-gui
@@ -34,6 +34,20 @@ set(RE_2D_RENDER_ROOT "${RE_SDK_ROOT}/../RE2DRender" CACHE PATH "Location of RE2
 # If a later version of the SDK supports native build the following code will be updated accordingly
 if(APPLE)
   set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "")
+endif()
+
+if(WIN32)
+  # We are enabling Clang toolchain by default because the compiler that comes with the SDK is Clang
+  # To install the Clang toolchain use the Visual Studio Installer tool, then select the proper
+  # build tools (at this time 2019 or 2022), then make sure to select the Optional component:
+  # "C++ Clang Tools for Windows"
+  # If not installed properly you will get this error: "No CMAKE_CXX_COMPILER could be found." in which
+  # case you can either set this variable to OFF in your CMakeLists.txt or install it.
+  option(RE_CMAKE_ENABLE_CLANG_TOOLCHAIN "Enable Clang toolchain" ON)
+  if(RE_CMAKE_ENABLE_CLANG_TOOLCHAIN)
+    message(STATUS "Enabling Clang toolchain for Windows.")
+    set(CMAKE_GENERATOR_TOOLSET "ClangCL")
+  endif()
 endif()
 
 #------------------------------------------------------------------------

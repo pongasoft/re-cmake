@@ -274,6 +274,7 @@ function(internal_add_re_sdk target)
     # Impl note: the link option @${ARG_RE_SDK_ROOT}/Tools/Libs/RackExtensionWrapper/x64/WinDLLExports.txt does
     # not work when doing a Visual Studio build for some reason => reading the file myself
     file(STRINGS "${ARG_RE_SDK_ROOT}/Tools/Libs/RackExtensionWrapper/x64/WinDLLExports.txt" WIN_DLL_EXPORTS)
+    list(TRANSFORM WIN_DLL_EXPORTS STRIP)
     set(RE_LINK_OPTIONS ${WIN_DLL_EXPORTS} "/NODEFAULTLIB:libcmt")
   endif()
 
@@ -286,9 +287,9 @@ function(internal_add_re_sdk target)
       NO_DEFAULT_PATH
   )
 
-  add_library(${target} STATIC ${ARG_RE_SDK_ROOT}/Tools/Libs/Jukebox/ShimABI/JukeboxABI.cpp ${CRTBEGIND_O} ${CRTENDD_O})
-  target_include_directories(${target} PRIVATE ${ARG_RE_SDK_ROOT}/Tools/Libs/Jukebox/ShimABI) # internal API
-  target_include_directories(${target} PUBLIC ${ARG_RE_SDK_ROOT}/API) # exporting SDK API to plugin
+  add_library(${target} STATIC "${ARG_RE_SDK_ROOT}/Tools/Libs/Jukebox/ShimABI/JukeboxABI.cpp" ${CRTBEGIND_O} ${CRTENDD_O})
+  target_include_directories(${target} PRIVATE "${ARG_RE_SDK_ROOT}/Tools/Libs/Jukebox/ShimABI") # internal API
+  target_include_directories(${target} PUBLIC "${ARG_RE_SDK_ROOT}/API") # exporting SDK API to plugin
   target_compile_options(${target} PUBLIC ${RE_COMPILE_OPTIONS})
   target_link_libraries(${target} PUBLIC ${SDK_WRAPPER_LIB})
   target_link_options(${target} PUBLIC ${RE_LINK_OPTIONS} ${ARG_NATIVE_LINK_OPTIONS})
