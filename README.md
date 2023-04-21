@@ -17,12 +17,24 @@ Features
 Requirements
 ------------
 
-* This project requires CMake (minimum version 3.13) to be properly installed (`cmake` executable must be in your `PATH`)
+* This project requires CMake (minimum version 3.24) to be properly installed (`cmake` executable must be in your `PATH`)
 * This project currently expects RE SDK 4.3.0 (Hi Res support), 4.2.0 or 4.1.0 to be installed on the machine (it will not download it for you)
 * Due to the RE SDK requirements, this project also requires python 3 to be installed
 * It has been tested on macOS Big Sur (11.7) / Xcode 13.2.1 (requires macOS 15+)
 * It has been tested on macOS 12.6 / Xcode 13.3 installed and Apple Silicon (forces `x86_64` build to compile and run)
-* It has been tested on Windows 10 with Visual Studio 16 2019 build tools
+* It has been tested on Windows 10 with Visual Studio 16 2019 build tools + Clang toolchain
+
+> #### Note
+> For Windows, since re-cmake 1.6.0, the default setup is to use the Clang toolchain, for 2 main reasons:
+>  * SIMD support out of the box (SIMD does not work without Clang)
+>  * Use a similar compiler provided with the RE SDK
+> 
+> Make sure you provision the build tools properly: using the Visual Studio Installer, select the "Individual components" tab, search for "clang" and make sure that "C++ Clang..." is selected (there may be more than one entry, so select all of them).
+> 
+> ![Visual Studio Installer](https://github.com/pongasoft/re-cmake/releases/download/v1.6.0/Visual_Studio_Installer.png)
+> 
+> If you want to disable the use of Clang (and revert to the behavior prior to v1.6.0), you can set the (CMake) option `RE_CMAKE_ENABLE_CLANG_TOOLCHAIN` to `OFF` before including `re-cmake` (and rerun `configure.py` after deleting the `build` folder).
+
 
 Quick Starting guide
 --------------------
@@ -320,6 +332,11 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.6.0 - 2023/04/21
+
+- Uses Clang toolchain on Windows by default. See the "Notes" in the "Requirements" section on how to properly configure the compiler on Windows.
+- This change ensures that SIMD works out of the box on Windows and that the compiler is similar to the one provided with the SDK (hence getting similar runtime behavior)
+
 #### 1.5.2 - 2023/04/14
 
 - Uses re-mock 1.4.1 (fixes multi bindings/same source in `rtc_bindings`)
