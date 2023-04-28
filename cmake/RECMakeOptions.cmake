@@ -16,7 +16,7 @@
 
 set(RE_CMAKE_MAJOR_VERSION 1)
 set(RE_CMAKE_MINOR_VERSION 6)
-set(RE_CMAKE_PATCH_VERSION 0)
+set(RE_CMAKE_PATCH_VERSION 1)
 
 # Location of RE SDK: can be set when invoking cmake => cmake -D "RE_SDK_ROOT:PATH=/path/to/re_sdk"
 # or via -p option in configure.py script or in cmake-gui
@@ -65,12 +65,17 @@ set(googletest_GIT_REPO "https://github.com/google/googletest" CACHE STRING "goo
 #------------------------------------------------------------------------
 # The git tag for googletest
 #------------------------------------------------------------------------
-set(googletest_GIT_TAG "release-1.12.1" CACHE STRING "googletest git tag")
+set(googletest_GIT_TAG "v1.13.0" CACHE STRING "googletest git tag")
 
 #------------------------------------------------------------------------
 # The download URL for googletest
 #------------------------------------------------------------------------
 set(googletest_DOWNLOAD_URL "${googletest_GIT_REPO}/archive/refs/tags/${googletest_GIT_TAG}.zip" CACHE STRING "googletest download url" FORCE)
+
+#------------------------------------------------------------------------
+# The download URL hash for googletest
+#------------------------------------------------------------------------
+set(googletest_DOWNLOAD_URL_HASH "SHA256=ffa17fbc5953900994e2deec164bb8949879ea09b411e07f215bfbb1f87f4632" CACHE STRING "googletest download url hash" FORCE)
 
 #------------------------------------------------------------------------
 # Option for invoking RE2DRender for hi res build
@@ -85,10 +90,12 @@ set(RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION "hi-res-only" CACHE STRING "Option for i
 set(re-logging_GIT_REPO "https://github.com/pongasoft/re-logging" CACHE STRING "re-logging git repository url")
 set(re-logging_GIT_TAG "v1.0.1" CACHE STRING "re-logging git tag")
 set(re-logging_DOWNLOAD_URL "${re-logging_GIT_REPO}/archive/refs/tags/${re-logging_GIT_TAG}.zip" CACHE STRING "re-logging download url" FORCE)
+set(re-logging_DOWNLOAD_URL_HASH "SHA256=e71898bfb4234505e5714a726139ad21ac0bd17d63f41af80d7cc9b5760dd57f" CACHE STRING "re-logging download url hash" FORCE)
 
 #------------------------------------------------------------------------
 # Git repo/tag for re-mock
 #------------------------------------------------------------------------
 set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
-set(re-mock_GIT_TAG "v1.4.1" CACHE STRING "re-mock git tag")
+set(re-mock_GIT_TAG "v1.4.2" CACHE STRING "re-mock git tag")
 set(re-mock_DOWNLOAD_URL "${re-mock_GIT_REPO}/archive/refs/tags/${re-mock_GIT_TAG}.zip" CACHE STRING "re-mock download url" FORCE)
+set(re-mock_DOWNLOAD_URL_HASH "SHA256=f19e41cde101334e5c99adebba17d23eed08aa3039120d6c0794402f3ee491b8" CACHE STRING "re-mock download url hash" FORCE)
