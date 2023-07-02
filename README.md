@@ -335,6 +335,7 @@ Release notes
 #### 1.7.0 - 2023/07/02
 
 - Handles RE SDK 4.4.0: on macOS/arm64 platform, generate an arm64 binary (with proper name)
+- Fixed options (removed `FORCE` since the rack extension can define it first thus can override it!)
 
 #### 1.6.1 - 2023/04/28
 
