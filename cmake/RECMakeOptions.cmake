@@ -70,6 +70,16 @@ elseif(WIN32)
 endif()
 
 #------------------------------------------------------------------------
+# re_cmake_test_and_set_git_tag (issue warning if differs)
+#------------------------------------------------------------------------
+macro(re_cmake_test_and_set_git_tag name tag)
+  set("${name}_GIT_TAG" "${tag}" CACHE STRING "${name} git tag")
+  if(NOT "${${name}_GIT_TAG}" STREQUAL "${tag}")
+    message(STATUS "[INFO] This project uses a different (potentially older) version of ${name} (${tag} != ${${name}_GIT_TAG})")
+  endif()
+endmacro()
+
+#------------------------------------------------------------------------
 # Option to enable/disable testing (includes GoogleTest)
 # Simply set to OFF if you want to use your own testing methodology
 # You can also write your own RECMakeAddTest.cmake module instead.
@@ -84,7 +94,7 @@ set(googletest_GIT_REPO "https://github.com/google/googletest" CACHE STRING "goo
 #------------------------------------------------------------------------
 # The git tag for googletest
 #------------------------------------------------------------------------
-set(googletest_GIT_TAG "v1.13.0" CACHE STRING "googletest git tag")
+re_cmake_test_and_set_git_tag(googletest "v1.13.0")
 
 #------------------------------------------------------------------------
 # The download URL for googletest
@@ -107,7 +117,7 @@ set(RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION "hi-res-only" CACHE STRING "Option for i
 # Git repo/tag for re-logging
 #------------------------------------------------------------------------
 set(re-logging_GIT_REPO "https://github.com/pongasoft/re-logging" CACHE STRING "re-logging git repository url")
-set(re-logging_GIT_TAG "v1.0.1" CACHE STRING "re-logging git tag")
+re_cmake_test_and_set_git_tag(re-logging "v1.0.1")
 set(re-logging_DOWNLOAD_URL "${re-logging_GIT_REPO}/archive/refs/tags/${re-logging_GIT_TAG}.zip" CACHE STRING "re-logging download url")
 set(re-logging_DOWNLOAD_URL_HASH "SHA256=e71898bfb4234505e5714a726139ad21ac0bd17d63f41af80d7cc9b5760dd57f" CACHE STRING "re-logging download url hash")
 
@@ -115,6 +125,6 @@ set(re-logging_DOWNLOAD_URL_HASH "SHA256=e71898bfb4234505e5714a726139ad21ac0bd17
 # Git repo/tag for re-mock
 #------------------------------------------------------------------------
 set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
-set(re-mock_GIT_TAG "v1.5.0" CACHE STRING "re-mock git tag")
+re_cmake_test_and_set_git_tag(re-mock "v1.5.0")
 set(re-mock_DOWNLOAD_URL "${re-mock_GIT_REPO}/archive/refs/tags/${re-mock_GIT_TAG}.zip" CACHE STRING "re-mock download url")
 set(re-mock_DOWNLOAD_URL_HASH "SHA256=d0eab4271e148037fda68534a085c9ac453f30c7ceb97f7117a5b7501136bd40" CACHE STRING "re-mock download url hash")
