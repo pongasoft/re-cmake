@@ -332,6 +332,10 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.7.0 - 2023/07/02
+
+- Handles RE SDK 4.4.0: on macOS/arm64 platform, generate an arm64 binary (with proper name)
+
 #### 1.6.1 - 2023/04/28
 
 - Upgraded google test to 1.13.0 and introduced url hashes in order to guarantee that the code is not tempered with (incidentally it speeds up the build since CMake can simply compare the hash of a previously downloaded dependency)

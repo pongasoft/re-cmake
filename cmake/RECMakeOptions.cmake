@@ -15,8 +15,8 @@
 # @author Yan Pujante
 
 set(RE_CMAKE_MAJOR_VERSION 1)
-set(RE_CMAKE_MINOR_VERSION 6)
-set(RE_CMAKE_PATCH_VERSION 1)
+set(RE_CMAKE_MINOR_VERSION 7)
+set(RE_CMAKE_PATCH_VERSION 0)
 
 # Location of RE SDK: can be set when invoking cmake => cmake -D "RE_SDK_ROOT:PATH=/path/to/re_sdk"
 # or via -p option in configure.py script or in cmake-gui
@@ -29,14 +29,33 @@ endif()
 # Location of RE2DRender (can be set similarly to RE_SDK_ROOT)
 set(RE_2D_RENDER_ROOT "${RE_SDK_ROOT}/../RE2DRender" CACHE PATH "Location of RE2DRender")
 
-# At this time, the latest version of the SDK (4.2.0) does not support the new Apple chipset
-# => we force a compilation in x86_64 to ensure that Recon can load the plugin in local native builds.
-# If a later version of the SDK supports native build the following code will be updated accordingly
+# Since 4.4.0, build in native arm64. Otherwise we force x86_64
 if(APPLE)
-  set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "")
-endif()
+  # on macOS "uname -m" returns the architecture (x86_64 or arm64)
+  execute_process(
+      COMMAND uname -m
+      RESULT_VARIABLE result
+      OUTPUT_VARIABLE RE_CMAKE_OSX_NATIVE_ARCHITECTURE
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
 
-if(WIN32)
+  if("${RE_SDK_VERSION}" VERSION_LESS "4.4.0")
+    set(RE_CMAKE_APPLE_ARM64_BUIlD OFF)
+    if("${RE_CMAKE_OSX_NATIVE_ARCHITECTURE}" STREQUAL "arm64")
+      set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "")
+      message(STATUS "macOS forcing x86_64 build on arm64 (upgrade to SDK 4.4.0 for arm64 build)")
+    else()
+      message(STATUS "macOS native ${RE_CMAKE_OSX_NATIVE_ARCHITECTURE} build")
+    endif()
+  else()
+    if("${RE_CMAKE_OSX_NATIVE_ARCHITECTURE}" STREQUAL "arm64")
+      set(RE_CMAKE_APPLE_ARM64_BUIlD ON)
+    else()
+      set(RE_CMAKE_APPLE_ARM64_BUIlD OFF)
+    endif()
+    message(STATUS "macOS native ${RE_CMAKE_OSX_NATIVE_ARCHITECTURE} build")
+  endif()
+elseif(WIN32)
   # We are enabling Clang toolchain by default because the compiler that comes with the SDK is Clang
   # To install the Clang toolchain use the Visual Studio Installer tool, then select the proper
   # build tools (at this time 2019 or 2022), then make sure to select the Optional component:
@@ -96,6 +115,6 @@ set(re-logging_DOWNLOAD_URL_HASH "SHA256=e71898bfb4234505e5714a726139ad21ac0bd17
 # Git repo/tag for re-mock
 #------------------------------------------------------------------------
 set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
-set(re-mock_GIT_TAG "v1.4.2" CACHE STRING "re-mock git tag")
+set(re-mock_GIT_TAG "v1.5.0" CACHE STRING "re-mock git tag")
 set(re-mock_DOWNLOAD_URL "${re-mock_GIT_REPO}/archive/refs/tags/${re-mock_GIT_TAG}.zip" CACHE STRING "re-mock download url" FORCE)
-set(re-mock_DOWNLOAD_URL_HASH "SHA256=f19e41cde101334e5c99adebba17d23eed08aa3039120d6c0794402f3ee491b8" CACHE STRING "re-mock download url hash" FORCE)
+set(re-mock_DOWNLOAD_URL_HASH "SHA256=d0eab4271e148037fda68534a085c9ac453f30c7ceb97f7117a5b7501136bd40" CACHE STRING "re-mock download url hash" FORCE)

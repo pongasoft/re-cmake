@@ -245,7 +245,11 @@ endfunction()
 function(internal_add_re_sdk target)
   if(APPLE)
     # For macOS we need to link with crtbegind.o and crtendd.o
-    set(RE_SDK_LLC_CMD ${ARG_RE_SDK_ROOT}/Tools/LLVM/Mac/bin/llc -mtriple=x86_64-apple-darwin9.0.0 -march=x86-64 -mcpu=x86-64 -mattr=+sse3 -relocation-model=pic -static-init-in-data -dwarf-version=4 -asm-verbose -debugger-tune=lldb -O0 -filetype=obj)
+    if("${RE_CMAKE_APPLE_ARM64_BUIlD}")
+      set(RE_SDK_LLC_CMD ${ARG_RE_SDK_ROOT}/Tools/LLVM/Mac/bin/llc -mtriple=arm64-apple-macosx11.0.0 -march=arm64 -mcpu=apple-m1 -mattr=+fp-armv8,+neon,+apple-a14 -relocation-model=pic -static-init-in-data -O2 -filetype=obj)
+    else()
+      set(RE_SDK_LLC_CMD ${ARG_RE_SDK_ROOT}/Tools/LLVM/Mac/bin/llc -mtriple=x86_64-apple-darwin9.0.0 -march=x86-64 -mcpu=x86-64 -mattr=+sse3 -relocation-model=pic -static-init-in-data -O2 -filetype=obj)
+    endif()
     # SDK provides .obc files which needs to be natively compiled to .o
     macro(compile_obc OBC_INPUT_FILE OUTPUT_FILE)
       add_custom_command(OUTPUT "${OUTPUT_FILE}"
@@ -262,7 +266,6 @@ function(internal_add_re_sdk target)
     set(CRTENDD_O ${CMAKE_CURRENT_BINARY_DIR}/crtendd.o)
     compile_obc(${ARG_RE_SDK_ROOT}/Tools/LLVM/Jukebox/libc/lib/phdsp64/crtendd.o.bc ${CRTENDD_O})
 
-    set(RE_COMPILE_OPTIONS "-femulated-tls")
     set(RE_LINK_OPTIONS
         "LINKER:-keep_private_externs"
         "LINKER:-exported_symbol,_JukeboxExport_InitializeDLL"
@@ -290,7 +293,6 @@ function(internal_add_re_sdk target)
   add_library(${target} STATIC "${ARG_RE_SDK_ROOT}/Tools/Libs/Jukebox/ShimABI/JukeboxABI.cpp" ${CRTBEGIND_O} ${CRTENDD_O})
   target_include_directories(${target} PRIVATE "${ARG_RE_SDK_ROOT}/Tools/Libs/Jukebox/ShimABI") # internal API
   target_include_directories(${target} PUBLIC "${ARG_RE_SDK_ROOT}/API") # exporting SDK API to plugin
-  target_compile_options(${target} PUBLIC ${RE_COMPILE_OPTIONS})
   target_link_libraries(${target} PUBLIC ${SDK_WRAPPER_LIB})
   target_link_options(${target} PUBLIC ${RE_LINK_OPTIONS} ${ARG_NATIVE_LINK_OPTIONS})
 
@@ -307,7 +309,11 @@ function(internal_add_plugin_library target type)
   target_include_directories(${target} PUBLIC "${ARG_INCLUDE_DIRECTORIES}" "${ARG_RE_SDK_ROOT}/API") # exporting SDK API to plugin
   set_target_properties(${target} PROPERTIES PREFIX "") # library name without lib
   if(APPLE)
-    set_target_properties(${target} PROPERTIES OUTPUT_NAME ${RE_ID})
+    if("${RE_CMAKE_APPLE_ARM64_BUIlD}")
+      set_target_properties(${target} PROPERTIES OUTPUT_NAME ${RE_ID}-arm64)
+    else()
+      set_target_properties(${target} PROPERTIES OUTPUT_NAME ${RE_ID})
+    endif()
   else()
     set_target_properties(${target} PROPERTIES OUTPUT_NAME "${RE_ID}64")
   endif()

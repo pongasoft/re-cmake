@@ -32,6 +32,12 @@ buildconfig.INCLUDE_DIRS = INCLUDE_DIRS
 buildconfig.OTHER_COMPILER_FLAGS = OTHER_COMPILER_FLAGS
 buildconfig.VERBOSE_BUILD = VERBOSE_BUILD
 
+# JE: Can be set to ['arm64'] or ['x64'] on Mac to temporarily build only one arch of the local45 dylib (save compile time during dev)
+# buildconfig.RESTRICT_ARCHS = ['arm64']
+
+# JE: Can be set to True, to enable debug info in any config (local45 only).
+# buildconfig.ENABLE_DEBUG_OVERRIDE = True
+
 # Clang's static code analysis is turned on by default. Uncomment to temporarily turn off.
 # buildconfig.STATIC_ANALYSIS = False
 
