@@ -48,6 +48,58 @@ function(to_cpp_native_path PATH CPP_NATIVE_PATH)
 endfunction()
 
 ##########################################################
+# sub_dir_list
+##########################################################
+macro(sub_dir_list result dir)
+  file(GLOB children RELATIVE "${dir}" "${dir}/*")
+  set(dirlist "")
+  foreach(child ${children})
+    if(IS_DIRECTORY "${dir}/${child}")
+      list(APPEND dirlist "${dir}/${child}")
+    endif()
+  endforeach()
+  set(${result} "${dirlist}")
+endmacro()
+
+##########################################################
+# find_program_recursive
+##########################################################
+function(find_program_recursive)
+  set(oneValueArgs VAR NAME)
+  set(multiValueArgs PATHS)
+  cmake_parse_arguments(
+      "ARG" # prefix
+      "" # options
+      "${oneValueArgs}" # single values
+      "${multiValueArgs}" # multiple values
+      ${ARGN}
+  )
+  set(PROGRAM "PROGRAM-${ARG_VAR}")
+  foreach(PATH IN LISTS ARG_PATHS)
+    find_program(
+        "${PROGRAM}" "${ARG_NAME}"
+        PATHS "${PATH}"
+        NO_DEFAULT_PATH
+    )
+    if("${${PROGRAM}}" STREQUAL "${PROGRAM}-NOTFOUND")
+      sub_dir_list(DIRS "${PATH}")
+      if(DIRS)
+        unset("${PROGRAM}" CACHE)
+        find_program_recursive(VAR "${ARG_VAR}" NAME "${ARG_NAME}" PATHS "${DIRS}")
+        if(NOT "${${ARG_VAR}}" STREQUAL "${ARG_VAR}-NOTFOUND")
+          set("${ARG_VAR}" "${${ARG_VAR}}" PARENT_SCOPE)
+          return()
+        endif()
+      endif()
+    else()
+      set("${ARG_VAR}" "${${PROGRAM}}" PARENT_SCOPE)
+      return()
+    endif()
+  endforeach()
+  set("${ARG_VAR}" "${ARG_VAR}-NOTFOUND" PARENT_SCOPE)
+endfunction()
+
+##########################################################
 # Main method called to add/create the RE plugin
 ##########################################################
 function(add_re_plugin)
@@ -125,10 +177,10 @@ function(add_re_plugin)
   # Determine RE2DRender executable
   set_default_value(ARG_RE_2D_RENDER_ROOT "${ARG_RE_SDK_ROOT}/../RE2DRender")
 
-  find_program(
-      RE_2D_RENDER_EXECUTABLE RE2DRender
+  find_program_recursive(
+      VAR RE_2D_RENDER_EXECUTABLE
+      NAME RE2DRender
       PATHS "${ARG_RE_2D_RENDER_ROOT}" "${ARG_RE_2D_RENDER_ROOT}/RE2DRender" "${ARG_RE_SDK_ROOT}/.."
-      NO_DEFAULT_PATH
   )
 
   if(${RE_2D_RENDER_EXECUTABLE} STREQUAL "RE_2D_RENDER_EXECUTABLE-NOTFOUND")
@@ -138,10 +190,10 @@ function(add_re_plugin)
   # Determine RE2DPreview executable
   set_default_value(ARG_RE_2D_PREVIEW_ROOT "${ARG_RE_SDK_ROOT}/../RE2DPreview")
 
-  find_program(
-      RE_2D_PREVIEW_EXECUTABLE RE2DPreview
+  find_program_recursive(
+      VAR RE_2D_PREVIEW_EXECUTABLE
+      NAME RE2DPreview
       PATHS "${ARG_RE_2D_PREVIEW_ROOT}" "${ARG_RE_2D_PREVIEW_ROOT}/RE2DPreview" "${ARG_RE_SDK_ROOT}/.."
-      NO_DEFAULT_PATH
   )
 
   if(${RE_2D_PREVIEW_EXECUTABLE} STREQUAL "RE_2D_PREVIEW_EXECUTABLE-NOTFOUND")
