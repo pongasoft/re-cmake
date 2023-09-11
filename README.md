@@ -332,9 +332,13 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.7.1 - 2023/09/11
+
+- Fixes issue locating RE2DRender and RE2DPreview after SDK 4.4.0 final release
+
 #### 1.7.0 - 2023/07/02
 
-- Handles RE SDK 4.4.0: on macOS/arm64 platform, generate an arm64 binary (with proper name)
+- Handles RE SDK 4.4.0 (beta): on macOS/arm64 platform, generate an arm64 binary (with proper name)
 - Fixed options (removed `FORCE` since the rack extension can define it first thus can override it!)
 - Prints a message when re-cmake detects a mismatch in version
 
