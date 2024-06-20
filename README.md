@@ -332,6 +332,10 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.7.2 - 2024/06/20
+
+- Updated `re-mock` version (added support for `device_categories`)
+
 #### 1.7.1 - 2023/09/11
 
 - Fixes issue locating RE2DRender and RE2DPreview after SDK 4.4.0 final release

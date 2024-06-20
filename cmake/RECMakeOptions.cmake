@@ -125,6 +125,6 @@ set(re-logging_DOWNLOAD_URL_HASH "SHA256=e71898bfb4234505e5714a726139ad21ac0bd17
 # Git repo/tag for re-mock
 #------------------------------------------------------------------------
 set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
-re_cmake_test_and_set_git_tag(re-mock "v1.5.0")
+re_cmake_test_and_set_git_tag(re-mock "v1.6.0")
 set(re-mock_DOWNLOAD_URL "${re-mock_GIT_REPO}/archive/refs/tags/${re-mock_GIT_TAG}.zip" CACHE STRING "re-mock download url")
-set(re-mock_DOWNLOAD_URL_HASH "SHA256=d0eab4271e148037fda68534a085c9ac453f30c7ceb97f7117a5b7501136bd40" CACHE STRING "re-mock download url hash")
+set(re-mock_DOWNLOAD_URL_HASH "SHA256=6879590c88ae318c57ff01e57c322e85ec7f598543cfe4eca99b728600b4b89e" CACHE STRING "re-mock download url hash")
