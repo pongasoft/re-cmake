@@ -14,7 +14,7 @@
 #
 # @author Yan Pujante
 
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.28)
 
 include(FetchContent)
 
@@ -57,6 +57,7 @@ function(re_cmake_fetch_content)
 
   if(ARG_DOWNLOAD_URL)
     FetchContent_Declare(           ${ARG_NAME}
+        EXCLUDE_FROM_ALL
         URL                        "${ARG_DOWNLOAD_URL}"
         URL_HASH                   "${ARG_DOWNLOAD_URL_HASH}"
         SOURCE_DIR                 "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME}-src"
@@ -66,6 +67,7 @@ function(re_cmake_fetch_content)
     set(FETCH_SOURCE "${ARG_DOWNLOAD_URL}")
   else()
     FetchContent_Declare(${ARG_NAME}
+        EXCLUDE_FROM_ALL
         GIT_REPOSITORY    ${ARG_GIT_REPO}
         GIT_TAG           ${ARG_GIT_TAG}
         GIT_CONFIG        advice.detachedHead=false
@@ -79,15 +81,13 @@ function(re_cmake_fetch_content)
 
   FetchContent_GetProperties(${ARG_NAME})
 
-  if(NOT ${ARG_NAME}_POPULATED)
-    if(FETCHCONTENT_SOURCE_DIR_${UPPERCASE_NAME})
-      message(STATUS "Using ${ARG_NAME} from local ${FETCHCONTENT_SOURCE_DIR_${UPPERCASE_NAME}}")
-    else()
-      message(STATUS "Fetching ${ARG_NAME} from ${FETCH_SOURCE}")
-    endif()
-
-    FetchContent_Populate(${ARG_NAME})
+  if(FETCHCONTENT_SOURCE_DIR_${UPPERCASE_NAME})
+    message(STATUS "Using ${ARG_NAME} from local ${FETCHCONTENT_SOURCE_DIR_${UPPERCASE_NAME}}")
+  else()
+    message(STATUS "Fetching ${ARG_NAME} from ${FETCH_SOURCE}")
   endif()
+
+  FetchContent_MakeAvailable(${ARG_NAME})
 
   set(${ARG_NAME}_ROOT_DIR "${${ARG_NAME}_SOURCE_DIR}" PARENT_SCOPE)
   set(${ARG_NAME}_SOURCE_DIR "${${ARG_NAME}_SOURCE_DIR}" PARENT_SCOPE)

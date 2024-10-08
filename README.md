@@ -332,6 +332,10 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.7.3 - 2024/10/08
+
+- Updated `re-mock`, `re-logging` and fixed CMake deprecation warning
+
 #### 1.7.2 - 2024/06/20
 
 - Updated `re-mock` version (added support for `device_categories`)

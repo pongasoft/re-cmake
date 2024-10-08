@@ -16,7 +16,7 @@
 
 set(RE_CMAKE_MAJOR_VERSION 1)
 set(RE_CMAKE_MINOR_VERSION 7)
-set(RE_CMAKE_PATCH_VERSION 1)
+set(RE_CMAKE_PATCH_VERSION 3)
 
 # Location of RE SDK: can be set when invoking cmake => cmake -D "RE_SDK_ROOT:PATH=/path/to/re_sdk"
 # or via -p option in configure.py script or in cmake-gui
@@ -117,14 +117,14 @@ set(RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION "hi-res-only" CACHE STRING "Option for i
 # Git repo/tag for re-logging
 #------------------------------------------------------------------------
 set(re-logging_GIT_REPO "https://github.com/pongasoft/re-logging" CACHE STRING "re-logging git repository url")
-re_cmake_test_and_set_git_tag(re-logging "v1.0.1")
+re_cmake_test_and_set_git_tag(re-logging "v1.0.2")
 set(re-logging_DOWNLOAD_URL "${re-logging_GIT_REPO}/archive/refs/tags/${re-logging_GIT_TAG}.zip" CACHE STRING "re-logging download url")
-set(re-logging_DOWNLOAD_URL_HASH "SHA256=e71898bfb4234505e5714a726139ad21ac0bd17d63f41af80d7cc9b5760dd57f" CACHE STRING "re-logging download url hash")
+set(re-logging_DOWNLOAD_URL_HASH "SHA256=e09c3796c06583d6d55b8c28539121f69716140f5e7f05df661c4875b807bc80" CACHE STRING "re-logging download url hash")
 
 #------------------------------------------------------------------------
 # Git repo/tag for re-mock
 #------------------------------------------------------------------------
 set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
-re_cmake_test_and_set_git_tag(re-mock "v1.6.0")
+re_cmake_test_and_set_git_tag(re-mock "v1.7.0")
 set(re-mock_DOWNLOAD_URL "${re-mock_GIT_REPO}/archive/refs/tags/${re-mock_GIT_TAG}.zip" CACHE STRING "re-mock download url")
-set(re-mock_DOWNLOAD_URL_HASH "SHA256=6879590c88ae318c57ff01e57c322e85ec7f598543cfe4eca99b728600b4b89e" CACHE STRING "re-mock download url hash")
+set(re-mock_DOWNLOAD_URL_HASH "SHA256=39a5503c07b05ce482179e63a60a5a2c32a4be9083d809090d7a7f8c6a093a02" CACHE STRING "re-mock download url hash")

@@ -14,7 +14,7 @@
 #
 # @author Yan Pujante
 
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.28)
 
 set(re-cmake_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
@@ -65,7 +65,6 @@ macro(re_cmake_include)
     include("${re-cmake_ROOT_DIR}/cmake/RECMakeFetchContent.cmake")
     re_cmake_fetch_content(NAME re-mock)
     # re-mock is a library to link with
-    add_subdirectory("${re-mock_ROOT_DIR}" "${re-mock_BINARY_DIR}" EXCLUDE_FROM_ALL)
     set(re-mock_LIBRARY_NAME "re-mock")
   endif()
 

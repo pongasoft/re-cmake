@@ -14,7 +14,7 @@
 #
 # @author Yan Pujante
 
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.28)
 
 # Making sure we are on macOS and Win10
 if(NOT (APPLE OR WIN32))
