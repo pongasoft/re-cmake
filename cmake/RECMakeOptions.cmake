@@ -15,8 +15,8 @@
 # @author Yan Pujante
 
 set(RE_CMAKE_MAJOR_VERSION 1)
-set(RE_CMAKE_MINOR_VERSION 7)
-set(RE_CMAKE_PATCH_VERSION 3)
+set(RE_CMAKE_MINOR_VERSION 8)
+set(RE_CMAKE_PATCH_VERSION 0)
 
 # Location of RE SDK: can be set when invoking cmake => cmake -D "RE_SDK_ROOT:PATH=/path/to/re_sdk"
 # or via -p option in configure.py script or in cmake-gui

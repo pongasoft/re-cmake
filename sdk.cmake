@@ -109,7 +109,7 @@ function(add_re_plugin)
   #############################################
   set(options ENABLE_DEBUG_LOGGING)
   set(oneValueArgs RE_SDK_VERSION RE_SDK_ROOT RE_2D_RENDER_ROOT RE_2D_PREVIEW_ROOT INFO_LUA MOTHERBOARD_DEF_LUA REALTIME_CONTROLLER_LUA DISPLAY_LUA
-                   RESOURCES_DIR PYTHON3_EXECUTABLE RE_RECON_EXECUTABLE RE_EDIT_EXECUTABLE)
+                   PATCH_METADATA_RSMETA RESOURCES_DIR PYTHON3_EXECUTABLE RE_RECON_EXECUTABLE RE_EDIT_EXECUTABLE)
   set(multiValueArgs BUILD_SOURCES RENDER_2D_SOURCES INCLUDE_DIRECTORIES COMPILE_DEFINITIONS COMPILE_OPTIONS
                      JBOX_COMPILE_DEFINITIONS JBOX_COMPILE_OPTIONS
                      NATIVE_BUILD_SOURCES NATIVE_BUILD_LIBS NATIVE_COMPILE_DEFINITIONS NATIVE_COMPILE_OPTIONS NATIVE_LINK_OPTIONS
@@ -161,11 +161,11 @@ function(add_re_plugin)
     message(FATAL_ERROR "Could not locate RE SDK version file. Make sure that RE_SDK_ROOT=${ARG_RE_SDK_ROOT} points to the root of the SDK.")
   endif()
 
-  set_default_value(ARG_INFO_LUA ${CMAKE_CURRENT_LIST_DIR}/info.lua)
-  set_default_value(ARG_MOTHERBOARD_DEF_LUA ${CMAKE_CURRENT_LIST_DIR}/motherboard_def.lua)
-  set_default_value(ARG_REALTIME_CONTROLLER_LUA ${CMAKE_CURRENT_LIST_DIR}/realtime_controller.lua)
-  set_default_value(ARG_DISPLAY_LUA ${CMAKE_CURRENT_LIST_DIR}/display.lua)
-  set_default_value(ARG_RESOURCES_DIR ${CMAKE_CURRENT_LIST_DIR}/Resources)
+  set_default_value(ARG_INFO_LUA "${CMAKE_CURRENT_LIST_DIR}/info.lua")
+  set_default_value(ARG_MOTHERBOARD_DEF_LUA "${CMAKE_CURRENT_LIST_DIR}/motherboard_def.lua")
+  set_default_value(ARG_REALTIME_CONTROLLER_LUA "${CMAKE_CURRENT_LIST_DIR}/realtime_controller.lua")
+  set_default_value(ARG_DISPLAY_LUA "${CMAKE_CURRENT_LIST_DIR}/display.lua")
+  set_default_value(ARG_RESOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/Resources")
 
   # Determine lua exe
   if(APPLE)
@@ -217,6 +217,9 @@ function(add_re_plugin)
   list(POP_BACK RE_FULL_PRODUCT_ID RE_VERSION_NUMBER) # RE_VERSION_NUMBER contains the version
   string(REPLACE "." ";" RE_FULL_PRODUCT_ID_LIST "${RE_FULL_PRODUCT_ID}")
   list(POP_BACK RE_FULL_PRODUCT_ID_LIST RE_ID) # RE_ID contains the unique ID
+
+  # Handles patch metadata
+  set_default_value(ARG_PATCH_METADATA_RSMETA "${CMAKE_CURRENT_LIST_DIR}/${RE_ID}.rsmeta")
 
   set(RE_FULL_PRODUCT_ID "${RE_FULL_PRODUCT_ID}" PARENT_SCOPE) # export
   set(RE_VERSION_NUMBER "${RE_VERSION_NUMBER}" PARENT_SCOPE) # export
@@ -491,16 +494,27 @@ function(internal_add_native_build)
     message(STATUS "No custom display (display.lua) found")
   endif()
 
+  # Installing patch metadata if exists
+  if(EXISTS ${ARG_PATCH_METADATA_RSMETA})
+    message(STATUS "Detected patch metadata ${ARG_PATCH_METADATA_RSMETA}")
+    install(
+        FILES ${ARG_PATCH_METADATA_RSMETA}
+        DESTINATION ${INSTALL_DIR}
+    )
+  endif()
+
   # Install Resources (i18n files)
   install(
       DIRECTORY ${ARG_RESOURCES_DIR}/
       DESTINATION ${INSTALL_DIR}
+      PATTERN ".DS_Store" EXCLUDE
   )
 
   # Install GUI
   install(
       DIRECTORY ${RE_GUI_DIR}/Output/
       DESTINATION ${INSTALL_DIR}
+      PATTERN ".DS_Store" EXCLUDE
   )
 
   #############################################
@@ -588,7 +602,7 @@ function(internal_add_jbox_build)
   macro(build45 target message extra_commands)
     add_custom_target(${target}
         COMMAND ${CMAKE_COMMAND} -E make_directory ${JBOX_BUILD_DIR}
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ARG_INFO_LUA} ${ARG_MOTHERBOARD_DEF_LUA} ${ARG_REALTIME_CONTROLLER_LUA} ${ARG_DISPLAY_LUA} ${BUILD45_FILE} ${JBOX_BUILD_DIR}
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ARG_INFO_LUA} ${ARG_MOTHERBOARD_DEF_LUA} ${ARG_REALTIME_CONTROLLER_LUA} ${ARG_DISPLAY_LUA} ${ARG_PATCH_METADATA_RSMETA} ${BUILD45_FILE} ${JBOX_BUILD_DIR}
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_RESOURCES_DIR} ${JBOX_BUILD_DIR}/Resources
         COMMAND ${Python3_EXECUTABLE} ${BUILD45_FILE} ${ARGN}
         ${extra_commands}

@@ -120,6 +120,7 @@ add_re_plugin(
               [MOTHERBOARD_DEF_LUA path_to_motherboard_def.lua]
               [REALTIME_CONTROLLER_LUA path_to_realtime_controller.lua]
               [DISPLAY_LUA path_to_display.lua]
+              [PATCH_METADATA_RSMETA path_to_patch_metadata.rsmeta]
               [RESOURCES_DIR path_to_Resources]
 
        # Optional include directories (to include extra '.h' files)
@@ -170,6 +171,7 @@ Detailed description
 | `MOTHERBOARD_DEF_LUA`        | No       | The path to `motherboard_def.lua` which by default is at the root                                                                                                                                                                      | `defs/motherboard_def.lua`                                                        |
 | `REALTIME_CONTROLLER_LUA`    | No       | The path to `realtime_controller.lua` which by default is at the root                                                                                                                                                                  | `defs/realtime_controller.lua`                                                    |
 | `DISPLAY_LUA`                | No       | The path to `display.lua` which by default is at the root (note that `display.lua` is only required if you have any custom displays)                                                                                                   | `src/lua/display.lua`                                                             |
+| `PATCH_METADATA_RSMETA`      | No       | The path to `<Product>.rsmeta` which is computed from the product id and located at the root                                                                                                                                           | `Macro.rsmeta`                                                                    |
 | `RESOURCES_DIR`              | No       | The path to the `Resources` folder which by default is at the root                                                                                                                                                                     | `i18n/Resources`                                                                  |
 | `INCLUDE_DIRECTORIES`        | No       | The list of directories that need to be included for searching for `.h` files. Note that it is a list of directories so it does not contain `-I`.                                                                                      | Usually refers to some list `${logging_include_dir}`                              |
 | `PYTHON3_EXECUTABLE`         | No       | The python 3 executable which is determined by default but you can override it here                                                                                                                                                    | `/opt/local/bin/python3`                                                          |
@@ -332,6 +334,10 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.8.0 - 2024/12/21
+
+- Added support for optional patch metadata files (rsmeta) introduced in SDK 4.6.0
+
 #### 1.7.3 - 2024/10/08
 
 - Updated `re-mock`, `re-logging` and fixed CMake deprecation warning

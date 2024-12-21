@@ -65,6 +65,7 @@ macro(re_cmake_include)
     include("${re-cmake_ROOT_DIR}/cmake/RECMakeFetchContent.cmake")
     re_cmake_fetch_content(NAME re-mock)
     # re-mock is a library to link with
+    add_subdirectory("${re-mock_ROOT_DIR}" "${re-mock_BINARY_DIR}" EXCLUDE_FROM_ALL)
     set(re-mock_LIBRARY_NAME "re-mock")
   endif()
 

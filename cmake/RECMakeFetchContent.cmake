@@ -52,39 +52,36 @@ function(re_cmake_fetch_content)
 
   string(TOUPPER "${ARG_NAME}" UPPERCASE_NAME)
 
-  # if root dir is defined, fetch content will not use git
-  set(FETCHCONTENT_SOURCE_DIR_${UPPERCASE_NAME} ${ARG_ROOT_DIR})
-
-  if(ARG_DOWNLOAD_URL)
-    FetchContent_Declare(           ${ARG_NAME}
-        EXCLUDE_FROM_ALL
-        URL                        "${ARG_DOWNLOAD_URL}"
-        URL_HASH                   "${ARG_DOWNLOAD_URL_HASH}"
-        SOURCE_DIR                 "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME}-src"
-        BINARY_DIR                 "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME}-build"
-        DOWNLOAD_EXTRACT_TIMESTAMP true
-        )
-    set(FETCH_SOURCE "${ARG_DOWNLOAD_URL}")
-  else()
+  if(ARG_ROOT_DIR)
+    message(STATUS "Using ${ARG_NAME} from local ${ARG_ROOT_DIR}")
     FetchContent_Declare(${ARG_NAME}
-        EXCLUDE_FROM_ALL
-        GIT_REPOSITORY    ${ARG_GIT_REPO}
-        GIT_TAG           ${ARG_GIT_TAG}
-        GIT_CONFIG        advice.detachedHead=false
-        GIT_SHALLOW       true
-        SOURCE_DIR        "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME}-src"
-        BINARY_DIR        "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME}-build"
-        )
-    set(FETCH_SOURCE "${ARG_GIT_REPO}/tree/${ARG_GIT_TAG}")
-  endif()
-
-
-  FetchContent_GetProperties(${ARG_NAME})
-
-  if(FETCHCONTENT_SOURCE_DIR_${UPPERCASE_NAME})
-    message(STATUS "Using ${ARG_NAME} from local ${FETCHCONTENT_SOURCE_DIR_${UPPERCASE_NAME}}")
+        SOURCE_DIR       "${ARG_ROOT_DIR}"
+        BINARY_DIR       "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME}-build"
+        SOURCE_SUBDIR    "do_not_make_available" # invalid folder to not execute CMakeLists.txt
+    )
   else()
-    message(STATUS "Fetching ${ARG_NAME} from ${FETCH_SOURCE}")
+    if(ARG_DOWNLOAD_URL)
+      message(STATUS "Fetching ${ARG_NAME} from ${ARG_DOWNLOAD_URL}")
+      FetchContent_Declare(          ${ARG_NAME}
+          URL                        "${ARG_DOWNLOAD_URL}"
+          URL_HASH                   "${ARG_DOWNLOAD_URL_HASH}"
+          SOURCE_DIR                 "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME}-src"
+          BINARY_DIR                 "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME}-build"
+          DOWNLOAD_EXTRACT_TIMESTAMP true
+          SOURCE_SUBDIR              "do_not_make_available"
+      )
+    else()
+      message(STATUS "Fetching ${ARG_NAME} from ${ARG_GIT_REPO}/tree/${ARG_GIT_TAG}")
+      FetchContent_Declare(${ARG_NAME}
+          GIT_REPOSITORY   ${ARG_GIT_REPO}
+          GIT_TAG          ${ARG_GIT_TAG}
+          GIT_CONFIG       advice.detachedHead=false
+          GIT_SHALLOW      true
+          SOURCE_DIR       "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME}-src"
+          BINARY_DIR       "${CMAKE_CURRENT_BINARY_DIR}/${ARG_NAME}-build"
+          SOURCE_SUBDIR    "do_not_make_available"
+      )
+    endif()
   endif()
 
   FetchContent_MakeAvailable(${ARG_NAME})

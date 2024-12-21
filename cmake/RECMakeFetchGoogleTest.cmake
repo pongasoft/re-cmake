@@ -25,3 +25,6 @@ set(gtest_force_shared_crt ON CACHE BOOL "Set by re-cmake" FORCE)
 option(INSTALL_GTEST "Enable installation of googletest. (Projects embedding googletest may want to turn this OFF.)" OFF)
 
 re_cmake_fetch_content(NAME googletest)
+
+# Add googletest directly to our build. This defines the gtest and gtest_main targets.
+add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR} EXCLUDE_FROM_ALL)
