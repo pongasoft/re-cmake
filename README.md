@@ -334,7 +334,7 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
-#### 1.8.0 - 2024/12/21
+#### 1.8.0 - 2024/12/22
 
 - Added support for optional patch metadata files (rsmeta) introduced in SDK 4.6.0
 
