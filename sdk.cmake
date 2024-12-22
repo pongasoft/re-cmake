@@ -501,6 +501,9 @@ function(internal_add_native_build)
         FILES ${ARG_PATCH_METADATA_RSMETA}
         DESTINATION ${INSTALL_DIR}
     )
+  else()
+    set(ARG_PATCH_METADATA_RSMETA "" PARENT_SCOPE)
+    message(STATUS "No patch metadata (${RE_ID}.rsmeta) found")
   endif()
 
   # Install Resources (i18n files)
@@ -599,12 +602,22 @@ function(internal_add_jbox_build)
 
   set(UNIVERSAL45_FILE "${CMAKE_BINARY_DIR}/${RE_FULL_PRODUCT_ID}-${RE_VERSION_NUMBER}.u45")
 
+  # display.lua and <Product.rsmeta> are optional
+  if(EXISTS ${ARG_DISPLAY_LUA})
+    set(UNIVERSAL45_COPY_DISPLAY_LUA_COMMAND COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ARG_DISPLAY_LUA}" "${JBOX_BUILD_DIR}")
+  endif()
+  if(EXISTS ${ARG_PATCH_METADATA_RSMETA})
+    set(UNIVERSAL45_COPY_PATCH_METADATA_RSMETA_COMMAND COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ARG_PATCH_METADATA_RSMETA}" "${JBOX_BUILD_DIR}")
+  endif()
+
   macro(build45 target message extra_commands)
     add_custom_target(${target}
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${JBOX_BUILD_DIR}
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ARG_INFO_LUA} ${ARG_MOTHERBOARD_DEF_LUA} ${ARG_REALTIME_CONTROLLER_LUA} ${ARG_DISPLAY_LUA} ${ARG_PATCH_METADATA_RSMETA} ${BUILD45_FILE} ${JBOX_BUILD_DIR}
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${ARG_RESOURCES_DIR} ${JBOX_BUILD_DIR}/Resources
-        COMMAND ${Python3_EXECUTABLE} ${BUILD45_FILE} ${ARGN}
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${JBOX_BUILD_DIR}"
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${ARG_INFO_LUA}" "${ARG_MOTHERBOARD_DEF_LUA}" "${ARG_REALTIME_CONTROLLER_LUA}" "${BUILD45_FILE}" "${JBOX_BUILD_DIR}"
+        ${UNIVERSAL45_COPY_DISPLAY_LUA_COMMAND}
+        ${UNIVERSAL45_COPY_PATCH_METADATA_RSMETA_COMMAND}
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${ARG_RESOURCES_DIR}" "${JBOX_BUILD_DIR}/Resources"
+        COMMAND ${Python3_EXECUTABLE} "${BUILD45_FILE}" ${ARGN}
         ${extra_commands}
         COMMAND ${CMAKE_COMMAND} -E echo ${message}
         DEPENDS common-render
