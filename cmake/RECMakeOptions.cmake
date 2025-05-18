@@ -16,7 +16,7 @@
 
 set(RE_CMAKE_MAJOR_VERSION 1)
 set(RE_CMAKE_MINOR_VERSION 8)
-set(RE_CMAKE_PATCH_VERSION 0)
+set(RE_CMAKE_PATCH_VERSION 1)
 
 # Location of RE SDK: can be set when invoking cmake => cmake -D "RE_SDK_ROOT:PATH=/path/to/re_sdk"
 # or via -p option in configure.py script or in cmake-gui
@@ -87,24 +87,12 @@ endmacro()
 option(RE_CMAKE_ENABLE_TESTING "Enable Testing (GoogleTest)" ON)
 
 #------------------------------------------------------------------------
-# The git respository to fetch googletest from
+# Git repo/tag for googletest
 #------------------------------------------------------------------------
 set(googletest_GIT_REPO "https://github.com/google/googletest" CACHE STRING "googletest git repository URL")
-
-#------------------------------------------------------------------------
-# The git tag for googletest
-#------------------------------------------------------------------------
-re_cmake_test_and_set_git_tag(googletest "v1.13.0")
-
-#------------------------------------------------------------------------
-# The download URL for googletest
-#------------------------------------------------------------------------
-set(googletest_DOWNLOAD_URL "${googletest_GIT_REPO}/archive/refs/tags/${googletest_GIT_TAG}.zip" CACHE STRING "googletest download url")
-
-#------------------------------------------------------------------------
-# The download URL hash for googletest
-#------------------------------------------------------------------------
-set(googletest_DOWNLOAD_URL_HASH "SHA256=ffa17fbc5953900994e2deec164bb8949879ea09b411e07f215bfbb1f87f4632" CACHE STRING "googletest download url hash")
+re_cmake_test_and_set_git_tag(googletest "v1.17.0")
+set(googletest_DOWNLOAD_URL "${googletest_GIT_REPO}/archive/refs/tags/${googletest_GIT_TAG}.zip" CACHE STRING "googletest download url" FORCE)
+set(googletest_DOWNLOAD_URL_HASH "SHA256=40d4ec942217dcc84a9ebe2a68584ada7d4a33a8ee958755763278ea1c5e18ff" CACHE STRING "googletest download url hash" FORCE)
 
 #------------------------------------------------------------------------
 # Option for invoking RE2DRender for hi res build
@@ -125,6 +113,6 @@ set(re-logging_DOWNLOAD_URL_HASH "SHA256=e09c3796c06583d6d55b8c28539121f69716140
 # Git repo/tag for re-mock
 #------------------------------------------------------------------------
 set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
-re_cmake_test_and_set_git_tag(re-mock "v1.7.0")
+re_cmake_test_and_set_git_tag(re-mock "v1.8.0")
 set(re-mock_DOWNLOAD_URL "${re-mock_GIT_REPO}/archive/refs/tags/${re-mock_GIT_TAG}.zip" CACHE STRING "re-mock download url")
-set(re-mock_DOWNLOAD_URL_HASH "SHA256=39a5503c07b05ce482179e63a60a5a2c32a4be9083d809090d7a7f8c6a093a02" CACHE STRING "re-mock download url hash")
+set(re-mock_DOWNLOAD_URL_HASH "SHA256=084a88445b1d3315359c09dd5dbc852801f095b6c1eafdeffc8fc5c88ccbcce4" CACHE STRING "re-mock download url hash")

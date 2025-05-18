@@ -334,6 +334,10 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.8.1 - 2025/05/18
+
+- Updated GoogleTest version (to get rid of CMake warnings)
+
 #### 1.8.0 - 2024/12/22
 
 - Added support for optional patch metadata files (rsmeta) introduced in SDK 4.6.0
@@ -354,7 +358,7 @@ Release notes
 
 - Handles RE SDK 4.4.0 (beta): on macOS/arm64 platform, generate an arm64 binary (with proper name)
 - Fixed options (removed `FORCE` since the rack extension can define it first thus can override it!)
-- Prints a message when re-cmake detects a mismatch in version
+- Print a message when re-cmake detects a mismatch in version
 
 #### 1.6.1 - 2023/04/28
 
