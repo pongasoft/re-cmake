@@ -14,9 +14,10 @@
 #
 # @author Yan Pujante
 
-set(RE_CMAKE_MAJOR_VERSION 1)
-set(RE_CMAKE_MINOR_VERSION 8)
-set(RE_CMAKE_PATCH_VERSION 1)
+set(re-cmake_MAJOR_VERSION 1)
+set(re-cmake_MINOR_VERSION 8)
+set(re-cmake_PATCH_VERSION 2)
+set(re-cmake_VERSION "${re-cmake_MAJOR_VERSION}.${re-cmake_MINOR_VERSION}.${re-cmake_PATCH_VERSION}")
 
 # Location of RE SDK: can be set when invoking cmake => cmake -D "RE_SDK_ROOT:PATH=/path/to/re_sdk"
 # or via -p option in configure.py script or in cmake-gui
@@ -105,9 +106,9 @@ set(RE_CMAKE_RE_2D_RENDER_HI_RES_OPTION "hi-res-only" CACHE STRING "Option for i
 # Git repo/tag for re-logging
 #------------------------------------------------------------------------
 set(re-logging_GIT_REPO "https://github.com/pongasoft/re-logging" CACHE STRING "re-logging git repository url")
-re_cmake_test_and_set_git_tag(re-logging "v1.0.2")
+set(re-logging_GIT_TAG "v2.0.0" CACHE STRING "re-logging git tag")
 set(re-logging_DOWNLOAD_URL "${re-logging_GIT_REPO}/archive/refs/tags/${re-logging_GIT_TAG}.zip" CACHE STRING "re-logging download url")
-set(re-logging_DOWNLOAD_URL_HASH "SHA256=e09c3796c06583d6d55b8c28539121f69716140f5e7f05df661c4875b807bc80" CACHE STRING "re-logging download url hash")
+set(re-logging_DOWNLOAD_URL_HASH "SHA256=2f2833bdb50f2ffbda583cedae2cacb5d8d4f54d320e31bebd1123baec93d293" CACHE STRING "re-logging download url hash")
 
 #------------------------------------------------------------------------
 # Git repo/tag for re-mock

@@ -334,6 +334,11 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.8.2 - 2025/08/15
+
+- Use `re-logging` 2.0.0
+- Renamed `RE_CMAKE_*_VERSION` to `re-cmake_*_VERSION` to be consistent with other projects 
+
 #### 1.8.1 - 2025/05/18
 
 - Updated GoogleTest version (to get rid of CMake warnings)
