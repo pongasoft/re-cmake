@@ -299,7 +299,7 @@ Of course the plugin in the end will run in a sandbox so care must be taken to p
 
 ```
 #if LOCAL_NATIVE_BUILD
-  // this code is executed ONLY during the native build so it can use loguru for example
+  // this code is executed ONLY during the native build so it can use re::logging for example
   ABORT_F("Unknown operation [%s] passed to JBox_Export_CreateNativeObject", iOperation);
 #else
   // this code is executed for jbox builds (local45/universal45)
@@ -334,6 +334,10 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+
+#### 1.8.4 - 2025/08/16
+
+- Use `re-logging` 2.0.2
 
 #### 1.8.3 - 2025/08/15
 
