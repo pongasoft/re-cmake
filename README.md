@@ -334,18 +334,21 @@ It is strongly recommended checking the [re-blank-plugin](https://github.com/pon
 
 Release notes
 -------------
+#### 1.8.5 - 2025/08/17
+
+- Use `re-mock` 1.8.1 (fix for `JBOX_TRACE` crashing in destructor)
 
 #### 1.8.4 - 2025/08/16
 
-- Use `re-logging` 2.0.2
+- Use `re-logging` 2.0.2 (simplified prefix)
 
 #### 1.8.3 - 2025/08/15
 
-- Use `re-logging` 2.0.1
+- Use `re-logging` 2.0.1 (fix for prefix override)
 
 #### 1.8.2 - 2025/08/15
 
-- Use `re-logging` 2.0.0
+- Use `re-logging` 2.0.0 (fix for Rack Extension development lifecycle with Recon)
 - Renamed `RE_CMAKE_*_VERSION` to `re-cmake_*_VERSION` to be consistent with other projects 
 
 #### 1.8.1 - 2025/05/18

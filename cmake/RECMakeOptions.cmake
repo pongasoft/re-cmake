@@ -16,7 +16,7 @@
 
 set(re-cmake_MAJOR_VERSION 1)
 set(re-cmake_MINOR_VERSION 8)
-set(re-cmake_PATCH_VERSION 4)
+set(re-cmake_PATCH_VERSION 5)
 set(re-cmake_VERSION "${re-cmake_MAJOR_VERSION}.${re-cmake_MINOR_VERSION}.${re-cmake_PATCH_VERSION}")
 
 # Location of RE SDK: can be set when invoking cmake => cmake -D "RE_SDK_ROOT:PATH=/path/to/re_sdk"
@@ -114,6 +114,6 @@ set(re-logging_DOWNLOAD_URL_HASH "SHA256=433e6660fd1b517d45c8e32e23d3fa5fb122ef8
 # Git repo/tag for re-mock
 #------------------------------------------------------------------------
 set(re-mock_GIT_REPO "https://github.com/pongasoft/re-mock" CACHE STRING "re-mock git repository url")
-re_cmake_test_and_set_git_tag(re-mock "v1.8.0")
+re_cmake_test_and_set_git_tag(re-mock "v1.8.1")
 set(re-mock_DOWNLOAD_URL "${re-mock_GIT_REPO}/archive/refs/tags/${re-mock_GIT_TAG}.zip" CACHE STRING "re-mock download url")
-set(re-mock_DOWNLOAD_URL_HASH "SHA256=084a88445b1d3315359c09dd5dbc852801f095b6c1eafdeffc8fc5c88ccbcce4" CACHE STRING "re-mock download url hash")
+set(re-mock_DOWNLOAD_URL_HASH "SHA256=1a8fe81cbe0ca60f83bc1332ec5633bf327b9753e6448b2d47d48338bb68915e" CACHE STRING "re-mock download url hash")
